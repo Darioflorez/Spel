@@ -24,22 +24,8 @@ struct event
     int counter;
 };
 
-/*typedef struct
-{
-    int x;
-    int y;
-    double acc_vel;
-    double angle;
-    double scale_x, scale_y;
-    double Vel_x, Vel_y;
-    ///Make the ball move smoothly
-    int StartPosition_x, StartPosition_y;
-}Info_Ball;*/
-
-///Ball Parameter
-SDL_Rect rcball;
 double acc_vel = 5;
-double angle = 0, angle2=0;
+double angle = 0;
 double scale_x= 0, scale_y=0;
 double Resultante=0;
 double Vel_x=0, Vel_y=0;
@@ -60,7 +46,6 @@ void FPS_Init();
 struct event input;
 pthread_t Thread_id;
 bool gameover = false;
-
 const double    PI = 3.14159265;
 int acc_distance;
 int SCREEN_WIDTH = 900;
@@ -72,6 +57,11 @@ int player4_input;
 ENetPacket *Thread_packet;
 char Thread_message[MAX];
 ENetHost *server;
+
+///NY VAR
+int points[5]={0,9,9,9,9};
+int points_made = 0;
+
 
 
 ///Det var i main
@@ -97,7 +87,8 @@ SDL_Rect rcPlayer1;
 SDL_Rect rcPlayer2;
 SDL_Rect rcPlayer3;
 SDL_Rect rcPlayer4;
-//Info_Ball Ball1;
+///Ball Parameter
+SDL_Rect rcball;
 
 
 void FPS_Fn()
@@ -199,6 +190,112 @@ void decode2(char *packet)
     }
 }
 
+
+double angleEffect(struct SDL_Rect ball, struct SDL_Rect player, int playernum)
+{
+  int ball_x,ball_y;
+
+  if(playernum == 1 || playernum == 2)
+  {
+    ball_x = ball.x + ball.w/2;
+
+    if(ball_x > (player.x + 50) && ball_x < (player.x + 100)){/// MITTEN 50 pixlar
+      return 0;
+    }
+    else if(ball_x > (player.x + 25) && ball_x < (player.x + 50)){/// vänster mitt
+      return -15;
+    }
+    else if(ball_x > (player.x + 100) && ball_x < (player.x + 125)){/// höger mitt
+      return 15;
+    }
+    else if( ball_x < (player.x + 25) ){ /// längst till vänster
+      return -30;
+    }
+    else if( ball_x > (player.x + 125) ){ ///högersida
+      return 30;
+    }
+  }
+  else
+  {
+    ball_y = ball.y + ball.h/2;
+
+    if(ball_y > (player.y + 50) && ball_y < (player.y + 100)){/// MITTEN 50 pixlar
+      return 0;
+    }
+    else if(ball_y > (player.y + 25) && ball_y < (player.y + 50)){/// vänster mitt
+      return 15;
+    }
+    else if(ball_y > (player.y + 100) && ball_y < (player.y + 125)){/// höger mitt
+      return -15;
+    }
+    else if( ball_y < (player.y + 25) ){ /// längst till vänster
+      return 30;
+    }
+    else if( ball_y > (player.y + 125) ){ ///högersida
+      return -30;
+    }
+  }
+
+  puts("INGEN EFFEKT!");
+  return 0;
+}
+
+double distance( int x1, int y1, int x2, int y2 ){
+
+    perror("DISTANCE\n\n");
+	return sqrt( pow(x2-x1,2) + pow(y2-y1,2) );
+
+}
+
+
+bool Collition(struct SDL_Rect player, struct SDL_Rect ball){
+	int px, py,i;
+	int ball_x = ball.x + ball.w/2;/// Ball mid X
+	int ball_y = ball.y + ball.h/2;/// Ball mid Y
+	int ball_r = ball.w/2;
+	double dis, dis_y, dis_x;
+
+	fprintf(stderr,"%d\n%d", ball.w, player.h );
+
+    perror("VI ÄR INNE O YEA!!!!!\n\n");
+
+	// Check closest box x from the ball
+	for(i=0;i<ball.w;i++)
+	{
+		if( ball_x < (player.x) ){
+			px = player.x;
+		}
+		else if( ball_x > (player.x + player.w) ){
+			px = (player.x + player.w);
+		}
+		else{
+			px = ball.x + i;
+		}
+		//check closest box y from the ball
+		if( ball_y < player.y ){
+			py = player.y;
+		}
+		else if( ball_y > (player.y + player.h) ){
+			py = (player.y + player.h);
+		}
+		else{
+			py = ball.y + i;
+		}
+		perror("BALL:");
+        fprintf(stderr, "%d", ball_r);
+        perror("DISTANCE:");
+        fprintf(stderr,"%f", distance(ball_x,ball_y,px,py) );
+
+		if( distance(ball_x,ball_y,px,py) < ball_r){
+			perror("COLLISION\n\n");
+			return true;
+		}
+	}
+	perror("ICKE COLLISION\n\n");
+	return false;
+}
+
+
 void *ball_move(void *input)
 {
   /* Cast the cookie pointer to the right type. */
@@ -208,12 +305,114 @@ void *ball_move(void *input)
 
     while(!gameover)
     {
-    MoveBall(rcball);
-    sprintf(message, "ball.x %d", rcball.x);
-    Broadcast_Packet(message, packet);
-    sprintf(message, "ball.y %d", rcball.y);
-    Broadcast_Packet(message, packet);
-    FPS_Fn();
+        ///PLAYER2s WALL
+        if(rcball.y < 1){ ///Touched the top of the screen
+            points[2]--;
+          ///SKICKA PRINTSCORE
+
+          RestartBall(rcball); /// resets ball position and speed
+          angle = rand() % 361;/// reset angel to a random one
+          newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
+          points_made ++;/// add 1 to points made in the game
+        }
+
+
+        ///PLAYER1s WALL
+        else if(rcball.y > (SCREEN_HEIGHT - rcball.h - 1) ){ /// touched the bottom of the screen
+            points[1]--;
+          ///SKICKA PRINTSCORE
+          RestartBall(rcball); /// resets ball position and speed
+          angle = rand() % 361; /// reset angel to a random one
+          newDirectionBall(angle,rcball); /// starts ball in a new direction from center ( bacause we did resetball before)
+          points_made ++; /// add 1 to points made in the game
+        }
+
+        /// PLAYER3s WALL
+        else if(rcball.x < 1){
+            points[3]--;
+          ///SKICKA PRINTSCORE
+            RestartBall(rcball);    /// resets ball position and speed
+            angle = rand() % 361;/// reset angel to a random one
+            newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
+            points_made ++;/// add 1 to points made in the game
+        }
+
+
+        ///PLAYER4s WALL
+        else if(rcball.x > (SCREEN_WIDTH - rcball.w -1)){
+        	points[4]--;
+        	///SKICKA PRINTSCORE
+
+          RestartBall(rcball);  /// resets ball position and speed
+          angle = rand() % 361;/// reset angel to a random one
+          newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
+          points_made ++;/// add 1 to points made in the game
+        }
+
+        if(rcball.y > rcPlayer1.y)///(Collition(rcPlayer1, rcball))/// Returns true if collition is detected
+        {
+            perror("True");
+            if( (angle > 211 && angle < 329) || (angle > -149 && angle < -31) ){ /// To avoid changing of direction
+                angle = 360 - angle - angleEffect(rcball,rcPlayer1,1);
+            }
+            else{
+                angle = 360 - angle;
+            }
+            rcball.y -= 5;/// to avoid geting stuck and adds a "bounce"-effect
+            newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+        }
+
+        if(rcball.y < rcPlayer2.y)///(Collition(rcPlayer2, rcball))/// Returns true if collition is detected
+        {
+            perror("True");
+            if( (angle > 31 && angle < 149) || (angle > -329 && angle < -211) ){ /// To avoid non-acceptable direction
+                angle = 360 - angle + angleEffect(rcball,rcPlayer2,2);
+            }
+            else{
+                angle = 360 - angle;
+            }
+            rcball.y += 5;/// to avoid geting stuck and adds a "bounce"-effect
+            newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+        }
+
+
+		if(Collition(rcPlayer3, rcball))/// Returns true if collition is detected
+        {
+            perror("True");
+            if( (angle > 121 && angle < 239) || (angle > -239 && angle < -121) ){
+                angle = 180 - angle + angleEffect(rcball,rcPlayer3,3);
+            }
+            else{
+                angle = 180 - angle;
+            }
+            rcball.x += 5;/// to avoid geting stuck and adds a "bounce"-effect
+            newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+        }
+
+
+        if(Collition(rcPlayer4, rcball))/// Returns true if collition is detected
+        {
+        	perror("True");
+            if( (angle > 301 || angle < 59) || (angle > -59 || angle < -301) )
+            {
+                angle = 180 - angle - angleEffect(rcball,rcPlayer4,4);
+            }
+            else
+            {
+                angle = 180 - angle;
+            }
+            rcball.x -= 5;/// to avoid geting stuck and adds a "bounce"-effect
+            newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+        }
+
+
+
+        MoveBall(rcball);
+        sprintf(message, "ball.x %d", rcball.x);
+        Broadcast_Packet(message, packet);
+        sprintf(message, "ball.y %d", rcball.y);
+        Broadcast_Packet(message, packet);
+        FPS_Fn();
     }
 
 }
