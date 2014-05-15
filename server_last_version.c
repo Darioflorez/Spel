@@ -346,6 +346,8 @@ int main(int argc, char **argv)
     srand(time(NULL));
     resetPlayerPosition();
 	RestartBall(rcball);
+	angle = rand() % 361;
+    newDirectionBall(angle,rcball);
 	///Init_Game;;;; Gör en sådant funktion!!!!!!!!!!
 
     if (enet_initialize()!=0)
