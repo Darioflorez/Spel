@@ -1,8 +1,8 @@
 #include "window.h"
 
 ///Screen dimension constants
-int SCREEN_WIDTH = 640;
-int SCREEN_HEIGHT = 480;
+int SCREEN_WIDTH = 900;
+int SCREEN_HEIGHT = 700;
 
 ///The window we'll be rendering to
 SDL_Window *Window = NULL;
@@ -107,23 +107,17 @@ bool loadMedia()
 
 
 	///Start position Player1
-	rcPlayer1.x = 640/2-75;
-	rcPlayer1.y = 480-30;
-
+	rcPlayer1.x = SCREEN_WIDTH/2-75;
+	rcPlayer1.y = SCREEN_HEIGHT-50;
 	///Start position Player2
-	rcPlayer2.x = 640/2-75;
-	rcPlayer2.y = 5;
-
+	rcPlayer2.x = SCREEN_WIDTH/2-75;
+	rcPlayer2.y = 25;
 	///Start position Player3
-    rcPlayer3.x =25;
-    rcPlayer3.y =480/2-75;
-
+	rcPlayer3.x = 25;
+	rcPlayer3.y = SCREEN_HEIGHT/2-75;
 	///Start position Player4
-    rcPlayer4.x = 640-50;
-    rcPlayer4.y = 480/2-75;
-	///Ball start position
-	rcball.x = SCREEN_WIDTH/2-30;
-    rcball.y = SCREEN_HEIGHT/2-30;
+	rcPlayer4.x = SCREEN_WIDTH-50;
+	rcPlayer4.y = SCREEN_HEIGHT/2-75;
 
 	return success;
 }

@@ -23,11 +23,6 @@ struct event
 {
     int counter;
 };
-typedef struct
-{
-    int x;
-    int y;
-}Position;
 
 /*typedef struct
 {
@@ -68,8 +63,8 @@ bool gameover = false;
 
 const double    PI = 3.14159265;
 int acc_distance;
-int SCREEN_WIDTH = 640;
-int SCREEN_HEIGHT = 480;
+int SCREEN_WIDTH = 900;
+int SCREEN_HEIGHT = 700;
 int player1_input;
 int player2_input;
 int player3_input;
@@ -97,10 +92,11 @@ int Intervall;
 ///Time controll
 int NextTick;
 
-Position Player1;
-Position Player2;
-Position Player3;
-Position Player4;
+///Players
+SDL_Rect rcPlayer1;
+SDL_Rect rcPlayer2;
+SDL_Rect rcPlayer3;
+SDL_Rect rcPlayer4;
 //Info_Ball Ball1;
 
 
@@ -227,23 +223,23 @@ void Player_Action()
     switch(player1_input)
     {
         case LEFT:
-            Player1.x -= 10;
-            if(Player1.x < 0 )
+            rcPlayer1.x -= 10;
+            if(rcPlayer1.x < 0 )
             {
-                Player1.x = 0;
+                rcPlayer1.x = 0;
             }
-            sprintf(message, "player1 %d", Player1.x);
+            sprintf(message, "player1 %d", rcPlayer1.x);
             Broadcast_Packet(message, packet);
             player1_input=0;
             break;
 
         case RIGHT:
-            Player1.x += 10;
-            if(Player1.x > SCREEN_WIDTH - 150)
+            rcPlayer1.x += 10;
+            if(rcPlayer1.x > SCREEN_WIDTH - 150)
             {
-                Player1.x = SCREEN_WIDTH - 150;
+                rcPlayer1.x = SCREEN_WIDTH - 150;
             }
-            sprintf(message, "player1 %d", Player1.x);
+            sprintf(message, "player1 %d", rcPlayer1.x);
             Broadcast_Packet(message, packet);
             player1_input=0;
             break;
@@ -252,23 +248,23 @@ void Player_Action()
     switch(player2_input)
     {
         case LEFT:
-            Player2.x -= 10;
-            if(Player2.x < 0 )
+            rcPlayer2.x -= 10;
+            if(rcPlayer2.x < 0 )
             {
-                Player2.x = 0;
+                rcPlayer2.x = 0;
             }
-            sprintf(message, "player2 %d", Player2.x);
+            sprintf(message, "player2 %d", rcPlayer2.x);
             Broadcast_Packet(message, packet);
             player2_input = 0;
             break;
 
             case RIGHT:
-                Player2.x += 10;
-                if(Player2.x > SCREEN_WIDTH - 150)
+                rcPlayer2.x += 10;
+                if(rcPlayer2.x > SCREEN_WIDTH - 150)
                 {
-                    Player2.x = SCREEN_WIDTH - 150;
+                    rcPlayer2.x = SCREEN_WIDTH - 150;
                 }
-                sprintf(message, "player2 %d", Player2.x);
+                sprintf(message, "player2 %d", rcPlayer2.x);
                 Broadcast_Packet(message, packet);
                 player2_input = 0;
                 break;
@@ -277,23 +273,23 @@ void Player_Action()
     switch(player3_input)
     {
         case UP:
-            Player3.y -= 10;
-            if(Player3.y < 0 )
+            rcPlayer3.y -= 10;
+            if(rcPlayer3.y < 0 )
             {
-                Player3.y = 0;
+                rcPlayer3.y = 0;
             }
-            sprintf(message, "player3 %d", Player3.y);
+            sprintf(message, "player3 %d", rcPlayer3.y);
             Broadcast_Packet(message, packet);
             player3_input = 0;
             break;
 
         case DOWN:
-            Player3.y += 10;
-            if(Player3.y > SCREEN_HEIGHT - 150)
+            rcPlayer3.y += 10;
+            if(rcPlayer3.y > SCREEN_HEIGHT - 150)
             {
-                Player3.y = SCREEN_HEIGHT - 150;
+                rcPlayer3.y = SCREEN_HEIGHT - 150;
             }
-            sprintf(message, "player3 %d", Player3.y);
+            sprintf(message, "player3 %d", rcPlayer3.y);
             Broadcast_Packet(message, packet);
             player3_input = 0;
             break;
@@ -302,23 +298,23 @@ void Player_Action()
     switch(player4_input)
     {
         case UP:
-            Player4.y -= 10;
-            if(Player4.y < 0 )
+            rcPlayer4.y -= 10;
+            if(rcPlayer4.y < 0 )
             {
-                Player4.y = 0;
+                rcPlayer4.y = 0;
             }
-            sprintf(message, "player4 %d", Player4.y);
+            sprintf(message, "player4 %d", rcPlayer4.y);
             Broadcast_Packet(message, packet);
             player4_input = 0;
             break;
 
         case DOWN:
-            Player4.y += 10;
-            if(Player4.y > SCREEN_HEIGHT - 150)
+            rcPlayer4.y += 10;
+            if(rcPlayer4.y > SCREEN_HEIGHT - 150)
             {
-                Player4.y = SCREEN_HEIGHT - 150;
+                rcPlayer4.y = SCREEN_HEIGHT - 150;
             }
-            sprintf(message, "player4 %d", Player4.y);
+            sprintf(message, "player4 %d", rcPlayer4.y);
             Broadcast_Packet(message, packet);
             player4_input = 0;
             break;
@@ -328,17 +324,18 @@ void Player_Action()
 
 void resetPlayerPosition(){
   ///Start position Player1
-  Player1.x = 640/2-75;
-  Player1.y = 480-50;
-  ///Start position Player2
-  Player2.x = 640/2-75;
-  Player2.y = 25;
-  ///Start position Player3
-  Player3.x = 25;
-  Player3.y = 480/2-75;
-  ///Start position Player4
-  Player4.x = 640-50;
-  Player4.y = 480/2-75;
+ ///Start position Player1
+	rcPlayer1.x = SCREEN_WIDTH/2-75;
+	rcPlayer1.y = SCREEN_HEIGHT-50;
+	///Start position Player2
+	rcPlayer2.x = SCREEN_WIDTH/2-75;
+    rcPlayer2.y = 25;
+	///Start position Player3
+	rcPlayer3.x = 25;
+	rcPlayer3.y = SCREEN_HEIGHT/2-75;
+	///Start position Player4
+	rcPlayer4.x = SCREEN_WIDTH-50;
+	rcPlayer4.y = SCREEN_HEIGHT/2-75;
 }
 
 

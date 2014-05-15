@@ -13,8 +13,8 @@
 #define scoreMax 10
 
 ///Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 900;
+const int SCREEN_HEIGHT = 700;
 const double    PI = 3.14159265;
 const int FRAME_PER_SECOND = 40;
 int Intervall;
@@ -86,17 +86,17 @@ SDL_Rect rcwall_p4;
 
 void resetPlayerPosition(){
   ///Start position Player1
-  rcPlayer1.x = 640/2-75;
-  rcPlayer1.y = 480-50;
+  rcPlayer1.x = SCREEN_WIDTH/2-75;
+  rcPlayer1.y = SCREEN_HEIGHT-50;
   ///Start position Player2
-  rcPlayer2.x = 640/2-75;
+  rcPlayer2.x = SCREEN_WIDTH/2-75;
   rcPlayer2.y = 25;
   ///Start position Player3
   rcPlayer3.x = 25;
-  rcPlayer3.y = 480/2-75;
+  rcPlayer3.y = SCREEN_HEIGHT/2-75;
   ///Start position Player4
-  rcPlayer4.x = 640-50;
-  rcPlayer4.y = 480/2-75;
+  rcPlayer4.x = SCREEN_HEIGHT-50;
+  rcPlayer4.y = SCREEN_WIDTH/2-75;
 }
 
 
@@ -129,7 +129,7 @@ double angleEffect(struct SDL_Rect ball, struct SDL_Rect player, int playernum)
   else
   {
     ball_y = ball.y + ball.h/2;
-  
+
     if(ball_y > (player.y + 50) && ball_y < (player.y + 100)){/// MITTEN 50 pixlar
       return 0;
     }
@@ -191,7 +191,7 @@ bool Collition(struct SDL_Rect player, struct SDL_Rect ball){
 		if( distance(ball_x,ball_y,px,py) < ball_r){
 			return true;
 		}
-	}	
+	}
 	return false;
 }
 
@@ -542,34 +542,34 @@ bool loadMedia()
     {
         return -1;
     }
-    rctext1.x = 640/2-100;
-    rctext1.y = 480-20;
-    rctext2.x = 640/2-100;
+    rctext1.x = SCREEN_WIDTH/2-100;
+    rctext1.y = SCREEN_HEIGHT-20;
+    rctext2.x = SCREEN_WIDTH/2-100;
     rctext2.y = 0;
     rctext3.x = 0;
-    rctext3.y = 480/2-100;
-    rctext4.x = 640-20;
-    rctext4.y = 480/2-100;
+    rctext3.y = SCREEN_HEIGHT/2-100;
+    rctext4.x = SCREEN_WIDTH-20;
+    rctext4.y = SCREEN_HEIGHT/2-100;
 
-    rcscoreMade.x = 640/2-120; /// Center of the screen
-    rcscoreMade.y = 480/2-30;
+    rcscoreMade.x = SCREEN_WIDTH/2-120; /// Center of the screen
+    rcscoreMade.y = SCREEN_HEIGHT/2-30;
 
-    rcPlayer1_text.x = 640/2-100;
-    rcPlayer1_text.y = 480-20;
-    rcPlayer2_text.x = 640/2-100;
+    rcPlayer1_text.x = SCREEN_WIDTH/2-100;
+    rcPlayer1_text.y = SCREEN_HEIGHT-20;
+    rcPlayer2_text.x = SCREEN_WIDTH/2-100;
     rcPlayer2_text.y = 0;
     rcPlayer3_text.x = 0;
-    rcPlayer3_text.y = 480/2-100;
-    rcPlayer4_text.x = 640-15;
-    rcPlayer4_text.y = 480/2-100;
+    rcPlayer3_text.y = SCREEN_HEIGHT/2-100;
+    rcPlayer4_text.x = SCREEN_WIDTH-15;
+    rcPlayer4_text.y = SCREEN_HEIGHT/2-100;
 
     rcwall_p1.x = 0;
-    rcwall_p1.y = 480-20;
+    rcwall_p1.y = SCREEN_HEIGHT-20;
     rcwall_p2.x = 0;
     rcwall_p2.y = 0;
     rcwall_p3.x = 0;
     rcwall_p3.y = 0;
-    rcwall_p4.x = 640-20;
+    rcwall_p4.x = SCREEN_WIDTH-20;
     rcwall_p4.y = 0;
 
     ///Music
@@ -577,17 +577,17 @@ bool loadMedia()
     effect = Mix_LoadWAV("low.wav");
 
 	///Start position Player1
-	rcPlayer1.x = 640/2-75;
-	rcPlayer1.y = 480-50;
+	rcPlayer1.x = SCREEN_WIDTH/2-75;
+	rcPlayer1.y = SCREEN_HEIGHT-50;
 	///Start position Player2
-	rcPlayer2.x = 640/2-75;
+	rcPlayer2.x = SCREEN_WIDTH/2-75;
 	rcPlayer2.y = 25;
 	///Start position Player3
 	rcPlayer3.x = 25;
-	rcPlayer3.y = 480/2-75;
+	rcPlayer3.y = SCREEN_HEIGHT/2-75;
 	///Start position Player4
-	rcPlayer4.x = 640-50;
-	rcPlayer4.y = 480/2-75;
+	rcPlayer4.x = SCREEN_WIDTH-50;
+	rcPlayer4.y = SCREEN_HEIGHT/2-75;
 
 
 	/*//Start ball position
@@ -641,7 +641,7 @@ void printScore() /// prints "score" on the screen
     SDL_Delay( 20 );
   }
 }
- 
+
 void checkExtraLifeWall(int points, bool &extraLife)
 {
 	if(points==1 && extraLife == false){
@@ -685,7 +685,7 @@ int main( int argc, char* args[] )
       ///Initialize Frames per second
       FPS_Init();
 
-      RestartBall(rcball);     
+      RestartBall(rcball);
       angle = rand() % 361;
       newDirectionBall(angle,rcball);
 
@@ -855,10 +855,10 @@ int main( int argc, char* args[] )
           else{
           	text2 = TTF_RenderText_Blended(font3, score[points[2]], colors[points[2]]);
           }
-          
+
           SDL_BlitSurface(text2, NULL, gScreenSurface, &rcPlayer2);
-          
-          RestartBall(rcball); /// resets ball position and speed   
+
+          RestartBall(rcball); /// resets ball position and speed
           angle = rand() % 361;/// reset angel to a random one
           newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
           points_made ++;/// add 1 to points made in the game
@@ -884,7 +884,7 @@ int main( int argc, char* args[] )
 
           SDL_BlitSurface(text1, NULL, gScreenSurface, &rcPlayer1);/// prints out the new score of hearts
 
-          RestartBall(rcball); /// resets ball position and speed  
+          RestartBall(rcball); /// resets ball position and speed
           angle = rand() % 361; /// reset angel to a random one
           newDirectionBall(angle,rcball); /// starts ball in a new direction from center ( bacause we did resetball before)
           points_made ++; /// add 1 to points made in the game
@@ -909,10 +909,10 @@ int main( int argc, char* args[] )
           {
             text3 = TTF_RenderText_Blended_Wrapped(font3, score[points[3]], colors[points[3]],30);
           }
-    
+
           SDL_BlitSurface(text3, NULL, gScreenSurface, &rcPlayer3);
 
-					RestartBall(rcball);    /// resets ball position and speed  
+					RestartBall(rcball);    /// resets ball position and speed
           angle = rand() % 361;/// reset angel to a random one
           newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
           points_made ++;/// add 1 to points made in the game
@@ -936,10 +936,10 @@ int main( int argc, char* args[] )
           {
             text4 = TTF_RenderText_Blended_Wrapped(font3, score[points[4]], colors[points[4]],30);
           }
-   
+
 		      SDL_BlitSurface(text4, NULL, gScreenSurface, &rcPlayer4);
 
-          RestartBall(rcball);  /// resets ball position and speed    
+          RestartBall(rcball);  /// resets ball position and speed
           angle = rand() % 361;/// reset angel to a random one
           newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
           points_made ++;/// add 1 to points made in the game
@@ -957,7 +957,7 @@ int main( int argc, char* args[] )
           else{
             angle = 360 - angle;
           }
-          rcball.y -= 5;/// to avoid geting stuck and adds a "bounce"-effect 
+          rcball.y -= 5;/// to avoid geting stuck and adds a "bounce"-effect
           newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
 				}
 
@@ -985,7 +985,7 @@ int main( int argc, char* args[] )
           else{
             angle = 360 - angle;
           }
-          rcball.y += 5;/// to avoid geting stuck and adds a "bounce"-effect 
+          rcball.y += 5;/// to avoid geting stuck and adds a "bounce"-effect
     			newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
 				}
 
@@ -1013,7 +1013,7 @@ int main( int argc, char* args[] )
           else{
             angle = 180 - angle;
           }
-          rcball.x += 5;/// to avoid geting stuck and adds a "bounce"-effect 
+          rcball.x += 5;/// to avoid geting stuck and adds a "bounce"-effect
     			newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
 				}
 
@@ -1043,7 +1043,7 @@ int main( int argc, char* args[] )
           {
             angle = 180 - angle;
           }
-          rcball.x -= 5;/// to avoid geting stuck and adds a "bounce"-effect 
+          rcball.x -= 5;/// to avoid geting stuck and adds a "bounce"-effect
           newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
 				}
 
@@ -1065,7 +1065,7 @@ int main( int argc, char* args[] )
 
         FPS_Fn();
 				///Update the surface
-          
+
         /// If someone lost ( got 0 points) then we reload bunch of shit
         if(points[1]==0 || points[2]==0 || points[3]== 0 || points[4]==0)
         {///someone lost!
@@ -1073,7 +1073,7 @@ int main( int argc, char* args[] )
           {
             font4 = TTF_OpenFont("good.ttf", i);
             rcendofgame.x = gScreenSurface->clip_rect.w/2-rcendofgame.w/2;
-            rcendofgame.y = 480/2-30;
+            rcendofgame.y = SCREEN_HEIGHT/2-30;
             endofgame = TTF_RenderText_Blended(font4,"GAME OVER!",color[0]);
             SDL_BlitSurface( gXOut, NULL, gScreenSurface, NULL );
             SDL_BlitSurface(endofgame, NULL, gScreenSurface, &rcendofgame);
@@ -1096,9 +1096,9 @@ int main( int argc, char* args[] )
             return 0; ///Exit game
           }
 
-          RestartBall(rcball); 
+          RestartBall(rcball);
           angle = rand() % 361;
-          newDirectionBall(angle,rcball);    
+          newDirectionBall(angle,rcball);
         }
 
 			}/// End of while loop
