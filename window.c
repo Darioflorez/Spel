@@ -119,6 +119,9 @@ bool loadMedia()
 	rcPlayer4.x = SCREEN_WIDTH-50;
 	rcPlayer4.y = SCREEN_HEIGHT/2-75;
 
+	rcball.x = SCREEN_WIDTH/2-30;
+    rcball.y = SCREEN_HEIGHT/2-30;
+
 	return success;
 }
 

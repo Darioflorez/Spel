@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <math.h>
 #include <time.h>
-#include <unistd.h>
 #include <assert.h>
 #include <sys/time.h>
 #include <SDL2/SDL.h>
@@ -77,7 +76,7 @@ char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 30;
+const int FRAME_PER_SECOND = 60;
 int Intervall;
 ///Time controll
 int NextTick;
@@ -242,7 +241,6 @@ double angleEffect(struct SDL_Rect ball, struct SDL_Rect player, int playernum)
 
 double distance( int x1, int y1, int x2, int y2 ){
 
-    perror("DISTANCE\n\n");
 	return sqrt( pow(x2-x1,2) + pow(y2-y1,2) );
 
 }
@@ -255,12 +253,12 @@ bool Collition(struct SDL_Rect player, struct SDL_Rect ball){
 	int ball_r = ball.w/2;
 	double dis, dis_y, dis_x;
 
-	fprintf(stderr,"%d\n%d", ball.w, player.h );
+	fprintf(stderr,"%d\n\n%d\n", ball.w, player.h );
 
-    perror("VI ÄR INNE O YEA!!!!!\n\n");
+    perror(">VI ÄR INNE!!!!!\n\n");
 
 	// Check closest box x from the ball
-	for(i=0;i<ball.w;i++)
+	for(i=0;i<ball.w;i++)  
 	{
 		if( ball_x < (player.x) ){
 			px = player.x;
@@ -282,9 +280,9 @@ bool Collition(struct SDL_Rect player, struct SDL_Rect ball){
 			py = ball.y + i;
 		}
 		perror("BALL:");
-        fprintf(stderr, "%d", ball_r);
+        fprintf(stderr, "%d\n", ball_r);
         perror("DISTANCE:");
-        fprintf(stderr,"%f", distance(ball_x,ball_y,px,py) );
+        fprintf(stderr,"%f\n", distance(ball_x,ball_y,px,py) );
 
 		if( distance(ball_x,ball_y,px,py) < ball_r){
 			perror("COLLISION\n\n");
@@ -349,7 +347,7 @@ void *ball_move(void *input)
           points_made ++;/// add 1 to points made in the game
         }
 
-        if(rcball.y > rcPlayer1.y)///(Collition(rcPlayer1, rcball))/// Returns true if collition is detected
+        if (Collition(rcPlayer1, rcball))/// Returns true if collition is detected //if(rcball.y > rcPlayer1.y)///
         {
             perror("True");
             if( (angle > 211 && angle < 329) || (angle > -149 && angle < -31) ){ /// To avoid changing of direction
@@ -362,7 +360,7 @@ void *ball_move(void *input)
             newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
         }
 
-        if(rcball.y < rcPlayer2.y)///(Collition(rcPlayer2, rcball))/// Returns true if collition is detected
+        if (Collition(rcPlayer2, rcball))/// Returns true if collition is detected ///if(rcball.y < rcPlayer2.y)///
         {
             perror("True");
             if( (angle > 31 && angle < 149) || (angle > -329 && angle < -211) ){ /// To avoid non-acceptable direction
@@ -405,8 +403,6 @@ void *ball_move(void *input)
             newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
         }
 
-
-
         MoveBall(rcball);
         sprintf(message, "ball.x %d", rcball.x);
         Broadcast_Packet(message, packet);
@@ -422,7 +418,7 @@ void Player_Action()
     switch(player1_input)
     {
         case LEFT:
-            rcPlayer1.x -= 10;
+            rcPlayer1.x -= 20;
             if(rcPlayer1.x < 0 )
             {
                 rcPlayer1.x = 0;
@@ -433,7 +429,7 @@ void Player_Action()
             break;
 
         case RIGHT:
-            rcPlayer1.x += 10;
+            rcPlayer1.x += 20;
             if(rcPlayer1.x > SCREEN_WIDTH - 150)
             {
                 rcPlayer1.x = SCREEN_WIDTH - 150;
@@ -447,7 +443,7 @@ void Player_Action()
     switch(player2_input)
     {
         case LEFT:
-            rcPlayer2.x -= 10;
+            rcPlayer2.x -= 20;
             if(rcPlayer2.x < 0 )
             {
                 rcPlayer2.x = 0;
@@ -458,7 +454,7 @@ void Player_Action()
             break;
 
             case RIGHT:
-                rcPlayer2.x += 10;
+                rcPlayer2.x += 20;
                 if(rcPlayer2.x > SCREEN_WIDTH - 150)
                 {
                     rcPlayer2.x = SCREEN_WIDTH - 150;
@@ -472,7 +468,7 @@ void Player_Action()
     switch(player3_input)
     {
         case UP:
-            rcPlayer3.y -= 10;
+            rcPlayer3.y -= 20;
             if(rcPlayer3.y < 0 )
             {
                 rcPlayer3.y = 0;
@@ -483,7 +479,7 @@ void Player_Action()
             break;
 
         case DOWN:
-            rcPlayer3.y += 10;
+            rcPlayer3.y += 20;
             if(rcPlayer3.y > SCREEN_HEIGHT - 150)
             {
                 rcPlayer3.y = SCREEN_HEIGHT - 150;
@@ -497,7 +493,7 @@ void Player_Action()
     switch(player4_input)
     {
         case UP:
-            rcPlayer4.y -= 10;
+            rcPlayer4.y -= 20;
             if(rcPlayer4.y < 0 )
             {
                 rcPlayer4.y = 0;
@@ -508,7 +504,7 @@ void Player_Action()
             break;
 
         case DOWN:
-            rcPlayer4.y += 10;
+            rcPlayer4.y += 20;
             if(rcPlayer4.y > SCREEN_HEIGHT - 150)
             {
                 rcPlayer4.y = SCREEN_HEIGHT - 150;
@@ -522,7 +518,6 @@ void Player_Action()
 }
 
 void resetPlayerPosition(){
-  ///Start position Player1
  ///Start position Player1
 	rcPlayer1.x = SCREEN_WIDTH/2-75;
 	rcPlayer1.y = SCREEN_HEIGHT-50;
@@ -543,10 +538,6 @@ void resetPlayerPosition(){
 int main(int argc, char **argv)
 {
     srand(time(NULL));
-    resetPlayerPosition();
-	RestartBall(rcball);
-	angle = rand() % 361;
-    newDirectionBall(angle,rcball);
 	///Init_Game;;;; Gör en sådant funktion!!!!!!!!!!
 
     if (enet_initialize()!=0)
@@ -601,6 +592,36 @@ int main(int argc, char **argv)
 
         }
     }
+
+    ///Nu har vi 4 clienter ta emot info om players and ball
+    if (enet_host_service (server, &event, 2000) > 0 &&
+       event.type == ENET_EVENT_TYPE_RECEIVE)
+    {
+
+        int i;
+        sscanf ((char*)event.packet->data, "%d %d %d %d", &rcPlayer1.w, &rcPlayer1.h, &rcball.w, &rcball.h);
+        rcPlayer2.w = rcPlayer1.w;
+        rcPlayer2.h = rcPlayer1.h;
+
+        rcPlayer3.w = rcPlayer1.w;
+        rcPlayer3.h = rcPlayer1.h;
+
+        rcPlayer4.w = rcPlayer1.w;
+        rcPlayer4.h = rcPlayer1.h;
+
+    }
+
+    resetPlayerPosition();
+    RestartBall(rcball);
+    angle = rand() % 361;
+    newDirectionBall(angle,rcball);
+
+    /*printf("\n>%d\n",rcball.w );
+    printf(">%d\n",rcball.h );
+    printf(">%d\n", rcPlayer1.h);
+    printf(">%d\n",rcPlayer2.w );
+    printf(">%d\n",rcPlayer3.h );
+    printf(">%d\n", rcPlayer4.w);*/
 
     ///Create a Thread to make all operations and send data to clients
     pthread_create(&Thread_id, NULL, &ball_move, &input);

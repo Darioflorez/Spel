@@ -27,10 +27,18 @@ bool SUCCESS = true;
 ///Thread
 struct event input;
 pthread_t Thread_id;
-const int FRAME_PER_SECOND = 40;
+const int FRAME_PER_SECOND = 50;
 int Intervall;
 ///Time controll
 int NextTick;
+
+void Send_Players_and_Ball_Info()
+{
+
+    sprintf(message,"%d %d %d %d", rcPlayer1.w, rcPlayer1.h, rcball.w, rcball.h);
+    packet = enet_packet_create(message, sizeof(message) +1, ENET_PACKET_FLAG_RELIABLE);
+    enet_peer_send(peer, 0, packet);
+}
 
 void FPS_Fn()
 {
@@ -97,8 +105,8 @@ bool connect_to_server()
         exit(EXIT_FAILURE);
     }
 
-    ///Connect to a server with IP address 130.237.84.99 on port 4950
-    enet_address_set_host(&address, "130.237.84.99");
+    ///Connect to a server with IP address 130.237.84.99 on port 4950//My ip 80.217.155.111
+    enet_address_set_host(&address, "localhost");
     address.port = 5950;
 
     ///Connect and use service
@@ -131,34 +139,25 @@ bool connect_to_server()
    if (enet_host_service (client, &netevent, 1000) > 0 &&
        netevent.type == ENET_EVENT_TYPE_RECEIVE)
    {
-        if(strcmp((char *)netevent.packet->data, "player1") == 0)
+        if(strcmp((char *)netevent.packet->data, "Server are full!") == 0)
         {
-            strcpy(me,(char *)netevent.packet->data);
-            return SUCCESS;
-        }
-        else if(strcmp((char *)netevent.packet->data, "player2") == 0)
-        {
-            strcpy(me,(char *)netevent.packet->data);
-            return SUCCESS;
-        }
-
-        else if(strcmp((char *)netevent.packet->data, "player3") == 0)
-        {
-            strcpy(me,(char *)netevent.packet->data);
-            return SUCCESS;
+            printf("%s\n", (char*)netevent.packet->data);
+            disconnect_from_server();
+            return FAILURE;
         }
 
         else if(strcmp((char *)netevent.packet->data, "player4") == 0)
         {
             strcpy(me,(char *)netevent.packet->data);
+            //Skicka data om players and ball
+            Send_Players_and_Ball_Info();
             return SUCCESS;
         }
 
-        else if(strcmp((char *)netevent.packet->data, "Server are full!") == 0)
+        else 
         {
             printf("%s\n", (char*)netevent.packet->data);
-            disconnect_from_server();
-            return FAILURE;
+            return SUCCESS;
         }
 
    }
@@ -173,7 +172,7 @@ void *deal_with_input(void* input)
     /* Cast the cookie pointer to the right type. */
     struct event* p = (struct event*) input;
     fprintf(stderr, "%s", p->me);
-    ///FPS_Init();
+    FPS_Init();
 
     while(!gameover)
     {
@@ -234,7 +233,10 @@ void *deal_with_input(void* input)
                 break;
             }
         }
-        ///////////////////////////
+        ///Frames per second
+        FPS_Fn();
+        ///Apply the image
+        Update_The_Surface();
     }
 }
 
@@ -307,7 +309,7 @@ int main(int argc, char **argv)
 			Update_The_Surface();
 			if (connect_to_server() == FAILURE)
 			{
-                return 1;
+                return EXIT_FAILURE;
 			}
 
 
@@ -345,7 +347,7 @@ int main(int argc, char **argv)
                     }
                 }
             }*/
-            FPS_Init();
+            //FPS_Init();
             while(!gameover)
             {
                     // If we had some netevent that interested us
@@ -371,9 +373,9 @@ int main(int argc, char **argv)
                     }
                 }
                 ///Frames per second
-        FPS_Fn();
+        //FPS_Fn();
         ///Apply the image
-        Update_The_Surface();
+        //Update_The_Surface();
             }
 
         }
