@@ -76,7 +76,7 @@ char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 30;
+const int FRAME_PER_SECOND = 10;
 int Intervall;
 ///Time controll
 int NextTick;
