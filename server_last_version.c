@@ -47,8 +47,8 @@ pthread_t Thread_id;
 bool gameover = false;
 const double    PI = 3.14159265;
 int acc_distance;
-int SCREEN_WIDTH = 900;
-int SCREEN_HEIGHT = 700;
+int SCREEN_WIDTH = 640;
+int SCREEN_HEIGHT = 480;
 int player1_input;
 int player2_input;
 int player3_input;
@@ -136,8 +136,8 @@ void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
 {
   acc_vel = 5;
   acc_distance = 0;
-  ball.x = SCREEN_WIDTH/2-30;
-  ball.y = SCREEN_HEIGHT/2-30;
+  ball.x = SCREEN_WIDTH/2-ball.w;
+  ball.y = SCREEN_HEIGHT/2-ball.h;
 }
 
 
@@ -250,7 +250,7 @@ bool Collition(struct SDL_Rect player, struct SDL_Rect ball){
 	int px, py,i;
 	int ball_x = ball.x + ball.w/2;/// Ball mid X
 	int ball_y = ball.y + ball.h/2;/// Ball mid Y
-	int ball_r = ball.w/2;
+	int ball_r = 25/2;
 	double dis, dis_y, dis_x;
 
 	fprintf(stderr,"%d\n\n%d\n", ball.w, player.h );
