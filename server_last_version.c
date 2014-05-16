@@ -76,7 +76,7 @@ char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 60;
+const int FRAME_PER_SECOND = 30;
 int Intervall;
 ///Time controll
 int NextTick;
@@ -348,7 +348,7 @@ void *ball_move(void *input)
         	points[4]--;
         	strcpy(message, "score");
             Broadcast_Packet(message, packet);
-            
+
 
           RestartBall(rcball);  /// resets ball position and speed
           angle = rand() % 361;/// reset angel to a random one
