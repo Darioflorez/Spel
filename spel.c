@@ -489,11 +489,12 @@ bool loadMedia()
         success = false;
     }
     font4 = TTF_OpenFont("good.ttf", 60);
-    if(font3 == NULL)
+    if(font4 == NULL)
     {
         printf( "Unable to load font %s! SDL Error: %s\n", "good.ttf", SDL_GetError() );
         success = false;
     }
+
     ///Load a text
     text1 = TTF_RenderText_Blended(font3, score[points[1]], colors[points[1]]);
     if(text1 == NULL)

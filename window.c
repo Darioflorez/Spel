@@ -81,6 +81,12 @@ bool create_window()
         }
 
     }
+
+    ///Initialize TTF
+	if (TTF_Init() == -1)
+	{
+        return false;
+	}
     return success;
 }
 
@@ -134,31 +140,13 @@ bool loadMedia()
 
 
 	///Load a Font
-    font = TTF_OpenFont("good.ttf", 32);
-    if(font == NULL)
-    {
-        printf( "Unable to load font %s! SDL Error: %s\n", "good.ttf", SDL_GetError() );
-        success = false;
-    }
-    font2 = TTF_OpenFont("Jura-Regular.ttf", 20);
-    if(font2 == NULL)
-    {
-        printf( "Unable to load font %s! SDL Error: %s\n", "Jura-Regular.ttf", SDL_GetError() );
-        success = false;
-    }
     font3 = TTF_OpenFont("Heart.ttf", 20);
     if(font3 == NULL)
     {
         printf( "Unable to load font %s! SDL Error: %s\n", "Heart.ttf", SDL_GetError() );
         success = false;
     }
-    font4 = TTF_OpenFont("good.ttf", 60);
-    if(font3 == NULL)
-    {
-        printf( "Unable to load font %s! SDL Error: %s\n", "good.ttf", SDL_GetError() );
-        success = false;
-    }
-
+    
 
 	///Load a text
     text1 = TTF_RenderText_Blended(font3, score[points[1]], colors[points[1]]);
