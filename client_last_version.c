@@ -23,7 +23,7 @@ bool SUCCESS = true;
 ///Thread
 struct event input;
 pthread_t Thread_id;
-const int FRAME_PER_SECOND = 40;
+const int FRAME_PER_SECOND = 10;
 int Intervall;
 ///Time controll
 int NextTick;
