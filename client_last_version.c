@@ -106,7 +106,7 @@ bool connect_to_server()
     }
 
     ///Connect to a server with IP address 130.237.84.99 on port 4950//My ip 80.217.155.111
-    enet_address_set_host(&address, "localhost");
+    enet_address_set_host(&address, "130.237.84.99");
     address.port = 5950;
 
     ///Connect and use service
