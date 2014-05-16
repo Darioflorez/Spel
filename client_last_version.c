@@ -156,7 +156,7 @@ bool connect_to_server()
 
         else 
         {
-            printf("%s\n", (char*)netevent.packet->data);
+            strcpy(me,(char *)netevent.packet->data);
             return SUCCESS;
         }
 
