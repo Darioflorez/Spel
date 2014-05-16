@@ -293,6 +293,12 @@ void decode_packet(char* packet)
    {
         sscanf (packet, "%s %d %d %d %d", 
             tmp, &points[1], &points[2], &points[3], &points[4]);
+
+        text1 = TTF_RenderText_Blended(font3, score[points[1]], colors[points[1]]);
+        text2 = TTF_RenderText_Blended(font3, score[points[2]], colors[points[2]]);
+        text3 = TTF_RenderText_Blended_Wrapped(font3, score[points[3]], colors[points[3]],30);
+        text4 = TTF_RenderText_Blended_Wrapped(font3, score[points[4]], colors[points[4]],30);
+
             printf(">points1: %d\n", points[1]);
             printf(">points2: %d\n", points[2]);
             printf(">points3: %d\n", points[3]);
