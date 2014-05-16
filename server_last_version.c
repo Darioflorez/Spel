@@ -16,6 +16,8 @@
 #define RIGHT 2
 #define UP  3
 #define DOWN 4
+#define SCREEN_WIDTH  640
+#define SCREEN_HEIGHT  480
 
 
 struct event
@@ -47,8 +49,6 @@ pthread_t Thread_id;
 bool gameover = false;
 const double    PI = 3.14159265;
 int acc_distance;
-int SCREEN_WIDTH = 640;
-int SCREEN_HEIGHT = 480;
 int player1_input;
 int player2_input;
 int player3_input;

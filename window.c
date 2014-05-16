@@ -1,8 +1,8 @@
 #include "window.h"
 
 ///Screen dimension constants
-int SCREEN_WIDTH = 640;
-int SCREEN_HEIGHT = 480;
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
 
 ///The window we'll be rendering to
 SDL_Window *Window = NULL;

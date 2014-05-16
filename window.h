@@ -9,8 +9,8 @@
 #include <string.h>
 
 ///Screen dimension constants
-extern int SCREEN_WIDTH;
-extern int SCREEN_HEIGHT;
+//extern int SCREEN_WIDTH;
+//extern int SCREEN_HEIGHT;
 
 ///The window we'll be rendering to
 extern SDL_Window *Window;
