@@ -599,15 +599,14 @@ int main(int argc, char **argv)
     {
 
         int i;
-        sscanf ((char*)event.packet->data, "%d %d %d %d", &rcPlayer1.w, &rcPlayer1.h, &rcball.w, &rcball.h);
+        sscanf ((char*)event.packet->data, "%d %d %d %d %d %d", 
+            &rcPlayer1.w, &rcPlayer1.h, &rcball.w, &rcball.h, &rcPlayer3.w, &rcPlayer3.h);
+        
         rcPlayer2.w = rcPlayer1.w;
         rcPlayer2.h = rcPlayer1.h;
 
-        rcPlayer3.w = rcPlayer1.w;
-        rcPlayer3.h = rcPlayer1.h;
-
-        rcPlayer4.w = rcPlayer1.w;
-        rcPlayer4.h = rcPlayer1.h;
+        rcPlayer3.w = rcPlayer4.w;
+        rcPlayer3.h = rcPlayer4.h;
 
     }
 

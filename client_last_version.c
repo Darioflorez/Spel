@@ -35,7 +35,8 @@ int NextTick;
 void Send_Players_and_Ball_Info()
 {
 
-    sprintf(message,"%d %d %d %d", rcPlayer1.w, rcPlayer1.h, rcball.w, rcball.h);
+    sprintf(message,"%d %d %d %d %d %d", 
+        rcPlayer1.w, rcPlayer1.h, rcball.w, rcball.h, rcPlayer3.w, rcPlayer3.h);
     packet = enet_packet_create(message, sizeof(message) +1, ENET_PACKET_FLAG_RELIABLE);
     enet_peer_send(peer, 0, packet);
 }
