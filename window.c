@@ -18,17 +18,44 @@ SDL_Surface* Ball = NULL;
 SDL_Rect rcball;
 
 ///ALL Players
-SDL_Surface* Player1;
-SDL_Surface* Player2;
-SDL_Surface* Player3;
-SDL_Surface* Player4;
+SDL_Surface* Player1 = NULL;
+SDL_Surface* Player2 = NULL;
+SDL_Surface* Player3 = NULL;
+SDL_Surface* Player4 = NULL;
 
 SDL_Rect rcPlayer1;
 SDL_Rect rcPlayer2;
 SDL_Rect rcPlayer3;
 SDL_Rect rcPlayer4;
 
+//Score
+SDL_Surface* text1;
+SDL_Surface* text2;
+SDL_Surface* text3;
+SDL_Surface* text4;
 
+
+SDL_Color colors[] = {{255,0,0},{255,51,0},{255,102,0},{255,153,0},{255,204,0},{255,255,0},{204,255,0},{153,255,0},{102,255,0},{51,255,0},{0,255,0}};
+//{{0,255,0},{51,255,0},{102,255,0},{153,255,0},{204,255,0},{255,255,0},{255,204,0},{255,153,0},{255,102,0},{255,51,0},{255,0,0}};
+
+
+SDL_Rect rctext1;
+SDL_Rect rctext2;
+SDL_Rect rctext3;
+SDL_Rect rctext4;
+
+SDL_Color color[2] = {{255,255,255},{255,0,0}};
+
+///Font
+TTF_Font* font = NULL;
+TTF_Font* font2 = NULL;
+TTF_Font* font3 = NULL;
+TTF_Font* font4 = NULL;
+
+const char* score[] = {" ","D","D D","D D D","D D D D","D D D D D","D D D D D D","D D D D D D D","D D D D D D D D","D D D D D D D D D","D D D D D D D D D D"};
+//{"DDDDDDDDDD","DDDDDDDDD","DDDDDDDD","DDDDDDD","DDDDDD","DDDDD","DDDD","DDD","DD","D","Game Over"}; ///Hearts
+
+int points[5] = {0,9,9,9,9};
 
 
 bool create_window()
@@ -59,6 +86,7 @@ bool create_window()
 
 bool loadMedia()
 {
+
 	///Loading success flag
 	bool success = true;
 
@@ -105,6 +133,56 @@ bool loadMedia()
 	}
 
 
+	///Load a Font
+    font = TTF_OpenFont("good.ttf", 32);
+    if(font == NULL)
+    {
+        printf( "Unable to load font %s! SDL Error: %s\n", "good.ttf", SDL_GetError() );
+        success = false;
+    }
+    font2 = TTF_OpenFont("Jura-Regular.ttf", 20);
+    if(font2 == NULL)
+    {
+        printf( "Unable to load font %s! SDL Error: %s\n", "Jura-Regular.ttf", SDL_GetError() );
+        success = false;
+    }
+    font3 = TTF_OpenFont("Heart.ttf", 20);
+    if(font3 == NULL)
+    {
+        printf( "Unable to load font %s! SDL Error: %s\n", "Heart.ttf", SDL_GetError() );
+        success = false;
+    }
+    font4 = TTF_OpenFont("good.ttf", 60);
+    if(font3 == NULL)
+    {
+        printf( "Unable to load font %s! SDL Error: %s\n", "good.ttf", SDL_GetError() );
+        success = false;
+    }
+
+
+	///Load a text
+    text1 = TTF_RenderText_Blended(font3, score[points[1]], colors[points[1]]);
+    if(text1 == NULL)
+    {
+        return -1;
+    }
+    text2 = TTF_RenderText_Blended(font3, score[points[2]], colors[points[2]]);
+    if(text2 == NULL)
+    {
+        return -1;
+    }
+    text3 = TTF_RenderText_Blended_Wrapped(font3, score[points[3]], colors[points[3]],30);
+    if(text3 == NULL)
+    {
+        return -1;
+    }
+    text4 = TTF_RenderText_Blended_Wrapped(font3, score[points[4]], colors[points[4]],30);
+    if(text4 == NULL)
+    {
+        return -1;
+    }
+
+
 
 	///Start position Player1
 	rcPlayer1.x = SCREEN_WIDTH/2-75;
@@ -122,6 +200,17 @@ bool loadMedia()
 	rcball.x = SCREEN_WIDTH/2-30;
     rcball.y = SCREEN_HEIGHT/2-30;
 
+    rctext1.x = SCREEN_WIDTH/2-100;
+    rctext1.y = SCREEN_HEIGHT-20;
+    rctext2.x = SCREEN_WIDTH/2-100;
+    rctext2.y = 0;
+    rctext3.x = 0;
+    rctext3.y = SCREEN_HEIGHT/2-100;
+    rctext4.x = SCREEN_WIDTH-20;
+    rctext4.y = SCREEN_HEIGHT/2-100;
+
+
+
 	return success;
 }
 
@@ -132,10 +221,14 @@ void close()
 	SDL_FreeSurface(Ball);
 	SDL_FreeSurface(Player1);
 	SDL_FreeSurface(Player2);
+	SDL_FreeSurface(Player3);
+	SDL_FreeSurface(Player4);
 	XOut = NULL;
 	Ball = NULL;
 	Player1 = NULL;
 	Player2 = NULL;
+	Player3 = NULL;
+	Player4 = NULL;
 
 	///Destroy window
 	SDL_DestroyWindow( Window );

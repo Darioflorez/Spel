@@ -1,12 +1,17 @@
 #ifndef WINDOW_H_INCLUDED
 #define WINDOW_H_INCLUDED
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
+#include <time.h>
+#include <math.h>
+#include <unistd.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 ///Screen dimension constants
 //extern int SCREEN_WIDTH;
@@ -36,6 +41,28 @@ extern SDL_Rect rcPlayer2;
 extern SDL_Rect rcPlayer3;
 extern SDL_Rect rcPlayer4;
 
+//Score
+extern SDL_Surface* text1;
+extern SDL_Surface* text2;
+extern SDL_Surface* text3;
+extern SDL_Surface* text4;
+
+extern SDL_Rect rctext1;
+extern SDL_Rect rctext2;
+extern SDL_Rect rctext3;
+extern SDL_Rect rctext4;
+
+extern int points[5];
+
+///Font
+extern TTF_Font* font;
+extern TTF_Font* font2;
+extern TTF_Font* font3;
+extern TTF_Font* font4;
+
+extern SDL_Color colors[1000];
+extern SDL_Color color[2];
+extern const char* score[1000];
 
 extern bool create_window();
 extern bool loadMedia();

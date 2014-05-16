@@ -10,6 +10,11 @@ int Update_The_Surface()
     SDL_BlitSurface(Player3, NULL, ScreenSurface, &rcPlayer3);
     SDL_BlitSurface(Player4, NULL, ScreenSurface, &rcPlayer4);
 
+    SDL_BlitSurface(text1, NULL, ScreenSurface, &rctext1);
+    SDL_BlitSurface(text2, NULL, ScreenSurface, &rctext2);
+    SDL_BlitSurface(text3, NULL, ScreenSurface, &rctext3);
+    SDL_BlitSurface(text4, NULL, ScreenSurface, &rctext4);
+
     ///Update the surface
     SDL_UpdateWindowSurface( Window );
     return 0;

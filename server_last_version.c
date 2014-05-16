@@ -344,6 +344,7 @@ void *ball_move(void *input)
           newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
           points_made ++;/// add 1 to points made in the game
         }
+        
         //PLAYERS POINTS
         sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
         Broadcast_Packet(message, packet);

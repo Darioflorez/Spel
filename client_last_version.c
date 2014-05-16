@@ -34,7 +34,6 @@ int NextTick;
 
 
 ///NEW VARIABLES
-int points[5] = {0,9,9,9,9};
 
 void Send_Players_and_Ball_Info()
 {
