@@ -172,7 +172,7 @@ void *deal_with_input(void* input)
     /* Cast the cookie pointer to the right type. */
     struct event* p = (struct event*) input;
     fprintf(stderr, "%s", p->me);
-    FPS_Init();
+    //FPS_Init();
 
     while(!gameover)
     {
@@ -234,9 +234,9 @@ void *deal_with_input(void* input)
             }
         }
         ///Frames per second
-        FPS_Fn();
+        //FPS_Fn();
         ///Apply the image
-        Update_The_Surface();
+        //Update_The_Surface();
     }
 }
 
@@ -347,7 +347,7 @@ int main(int argc, char **argv)
                     }
                 }
             }*/
-            //FPS_Init();
+            FPS_Init();
             while(!gameover)
             {
                     // If we had some netevent that interested us
@@ -373,9 +373,9 @@ int main(int argc, char **argv)
                     }
                 }
                 ///Frames per second
-        //FPS_Fn();
+        FPS_Fn();
         ///Apply the image
-        //Update_The_Surface();
+        Update_The_Surface();
             }
 
         }
