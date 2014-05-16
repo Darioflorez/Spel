@@ -306,8 +306,7 @@ void *ball_move(void *input)
         ///PLAYER2s WALL
         if(rcball.y < 1){ ///Touched the top of the screen
             points[2]--;
-          ///SKICKA PRINTSCORE
-
+            ///SKICKA POINTS
           RestartBall(rcball); /// resets ball position and speed
           angle = rand() % 361;/// reset angel to a random one
           newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
@@ -335,7 +334,6 @@ void *ball_move(void *input)
             points_made ++;/// add 1 to points made in the game
         }
 
-
         ///PLAYER4s WALL
         else if(rcball.x > (SCREEN_WIDTH - rcball.w -1)){
         	points[4]--;
@@ -346,6 +344,9 @@ void *ball_move(void *input)
           newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
           points_made ++;/// add 1 to points made in the game
         }
+        //PLAYERS POINTS
+        sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
+        Broadcast_Packet(message, packet);
 
         if (Collition(rcPlayer1, rcball))/// Returns true if collition is detected //if(rcball.y > rcPlayer1.y)///
         {
@@ -601,26 +602,21 @@ int main(int argc, char **argv)
         int i;
         sscanf ((char*)event.packet->data, "%d %d %d %d %d %d", 
             &rcPlayer1.w, &rcPlayer1.h, &rcball.w, &rcball.h, &rcPlayer3.w, &rcPlayer3.h);
-        
+
         rcPlayer2.w = rcPlayer1.w;
         rcPlayer2.h = rcPlayer1.h;
 
-        rcPlayer3.w = rcPlayer4.w;
-        rcPlayer3.h = rcPlayer4.h;
+        rcPlayer4.w = rcPlayer3.w;
+        rcPlayer4.h = rcPlayer3.h;
 
     }
-
+    
+    //Start spelet
     resetPlayerPosition();
     RestartBall(rcball);
     angle = rand() % 361;
     newDirectionBall(angle,rcball);
 
-    /*printf("\n>%d\n",rcball.w );
-    printf(">%d\n",rcball.h );
-    printf(">%d\n", rcPlayer1.h);
-    printf(">%d\n",rcPlayer2.w );
-    printf(">%d\n",rcPlayer3.h );
-    printf(">%d\n", rcPlayer4.w);*/
 
     ///Create a Thread to make all operations and send data to clients
     pthread_create(&Thread_id, NULL, &ball_move, &input);

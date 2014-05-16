@@ -32,6 +32,10 @@ int Intervall;
 ///Time controll
 int NextTick;
 
+
+///NEW VARIABLES
+int points[5] = {0,9,9,9,9};
+
 void Send_Players_and_Ball_Info()
 {
 
@@ -285,6 +289,15 @@ void decode_packet(char* packet)
         strcpy(tmp, &packet[7]);
         rcball.y = atoi(tmp);
         printf("Ball.y: %d\n\n", rcball.y);
+   }
+   else if (strstr(packet, "points"))
+   {
+        sscanf (packet, "%s %d %d %d %d", 
+            tmp, &points[1], &points[2], &points[3], &points[4]);
+            printf(">points1: %d\n", points[1]);
+            printf(">points2: %d\n", points[2]);
+            printf(">points3: %d\n", points[3]);
+            printf(">points4: %d\n", points[4]);
    }
 }
 
