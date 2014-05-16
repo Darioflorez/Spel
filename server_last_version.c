@@ -306,7 +306,10 @@ void *ball_move(void *input)
         ///PLAYER2s WALL
         if(rcball.y < 1){ ///Touched the top of the screen
             points[2]--;
-            ///SKICKA POINTS
+            strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+
+
           RestartBall(rcball); /// resets ball position and speed
           angle = rand() % 361;/// reset angel to a random one
           newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
@@ -317,7 +320,10 @@ void *ball_move(void *input)
         ///PLAYER1s WALL
         else if(rcball.y > (SCREEN_HEIGHT - rcball.h - 1) ){ /// touched the bottom of the screen
             points[1]--;
-          ///SKICKA PRINTSCORE
+            strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+
+
           RestartBall(rcball); /// resets ball position and speed
           angle = rand() % 361; /// reset angel to a random one
           newDirectionBall(angle,rcball); /// starts ball in a new direction from center ( bacause we did resetball before)
@@ -327,7 +333,10 @@ void *ball_move(void *input)
         /// PLAYER3s WALL
         else if(rcball.x < 1){
             points[3]--;
-          ///SKICKA PRINTSCORE
+            strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+
+
             RestartBall(rcball);    /// resets ball position and speed
             angle = rand() % 361;/// reset angel to a random one
             newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
@@ -337,14 +346,16 @@ void *ball_move(void *input)
         ///PLAYER4s WALL
         else if(rcball.x > (SCREEN_WIDTH - rcball.w -1)){
         	points[4]--;
-        	///SKICKA PRINTSCORE
+        	strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+            
 
           RestartBall(rcball);  /// resets ball position and speed
           angle = rand() % 361;/// reset angel to a random one
           newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
           points_made ++;/// add 1 to points made in the game
         }
-        
+
         //PLAYERS POINTS
         sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
         Broadcast_Packet(message, packet);

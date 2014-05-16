@@ -1,7 +1,3 @@
-#include <enet/enet.h>
-#include <stdio.h>
-#include <string.h>
-#include <pthread.h>
 #include "window.h"
 
 
@@ -168,6 +164,16 @@ bool connect_to_server()
 
 }
 
+void printScore() /// prints "score" on the screen
+{
+    int i;
+    for(i=0;i<60;i++)/// Loop must be there otherwise it gets really f-uped and only shows "score" for 1ms
+  {
+    SDL_BlitSurface(scoreMade, NULL, ScreenSurface, &rcscoreMade);
+    SDL_UpdateWindowSurface( Window );
+    SDL_Delay( 20 );
+  }
+}
 
 
 void *deal_with_input(void* input)
@@ -303,6 +309,11 @@ void decode_packet(char* packet)
             printf(">points2: %d\n", points[2]);
             printf(">points3: %d\n", points[3]);
             printf(">points4: %d\n", points[4]);
+   }
+
+   else if (strstr(packet, "score"))
+   {
+    printScore();
    }
 }
 

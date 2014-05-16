@@ -8,14 +8,13 @@
 #include <time.h>
 #include <math.h>
 #include <unistd.h>
+#include <enet/enet.h>
+#include <pthread.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
-///Screen dimension constants
-//extern int SCREEN_WIDTH;
-//extern int SCREEN_HEIGHT;
 
 ///The window we'll be rendering to
 extern SDL_Window *Window;
@@ -24,6 +23,11 @@ extern SDL_Surface *ScreenSurface;
 
 ///The image we will load and show on the screen
 extern SDL_Surface* XOut;
+
+//Score a point
+extern SDL_Surface* scoreMade;
+extern SDL_Rect rcscoreMade;
+
 
 ///The ball
 extern SDL_Surface* Ball;
@@ -51,6 +55,7 @@ extern SDL_Rect rctext1;
 extern SDL_Rect rctext2;
 extern SDL_Rect rctext3;
 extern SDL_Rect rctext4;
+
 
 extern int points[5];
 

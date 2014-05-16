@@ -12,6 +12,10 @@ SDL_Surface *ScreenSurface = NULL;
 ///The image we will load and show on the screen
 SDL_Surface* XOut = NULL;
 
+//When you score a point
+SDL_Surface* scoreMade = NULL;
+SDL_Rect rcscoreMade;
+
 ///The ball
 SDL_Surface* Ball = NULL;
 ///Ball position
@@ -140,12 +144,31 @@ bool loadMedia()
 
 
 	///Load a Font
+    font = TTF_OpenFont("good.ttf", 32);
+    if(font == NULL)
+    {
+        printf( "Unable to load font %s! SDL Error: %s\n", "good.ttf", SDL_GetError() );
+        success = false;
+    }
+    font2 = TTF_OpenFont("Jura-Regular.ttf", 20);
+    if(font2 == NULL)
+    {
+        printf( "Unable to load font %s! SDL Error: %s\n", "Jura-Regular.ttf", SDL_GetError() );
+        success = false;
+    }
     font3 = TTF_OpenFont("Heart.ttf", 20);
     if(font3 == NULL)
     {
         printf( "Unable to load font %s! SDL Error: %s\n", "Heart.ttf", SDL_GetError() );
         success = false;
     }
+    font4 = TTF_OpenFont("good.ttf", 60);
+    if(font4 == NULL)
+    {
+        printf( "Unable to load font %s! SDL Error: %s\n", "good.ttf", SDL_GetError() );
+        success = false;
+    }
+
     
 
 	///Load a text
