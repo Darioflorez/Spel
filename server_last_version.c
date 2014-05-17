@@ -76,7 +76,7 @@ char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 60;
+const int FRAME_PER_SECOND = 80;
 int Intervall;
 ///Time controll
 int NextTick;
@@ -140,6 +140,20 @@ void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
   ball.y = SCREEN_HEIGHT/2-ball.h;
 }
 
+void resetPlayerPosition(){
+ ///Start position Player1
+    rcPlayer1.x = SCREEN_WIDTH/2-75;
+    rcPlayer1.y = SCREEN_HEIGHT-50;
+    ///Start position Player2
+    rcPlayer2.x = SCREEN_WIDTH/2-75;
+    rcPlayer2.y = 25;
+    ///Start position Player3
+    rcPlayer3.x = 25;
+    rcPlayer3.y = SCREEN_HEIGHT/2-75;
+    ///Start position Player4
+    rcPlayer4.x = SCREEN_WIDTH-50;
+    rcPlayer4.y = SCREEN_HEIGHT/2-75;
+}
 
 void MoveBall(struct SDL_Rect &ball)
 {
@@ -147,7 +161,6 @@ void MoveBall(struct SDL_Rect &ball)
     ball.y = StartPosition_y + (Vel_y + (Vel_y * acc_distance));
     acc_distance++;
 }
-
 
 void decode2(char *packet)
 {
@@ -188,7 +201,6 @@ void decode2(char *packet)
         player4_input = DOWN;
     }
 }
-
 
 double angleEffect(struct SDL_Rect ball, struct SDL_Rect player, int playernum)
 {
@@ -250,12 +262,8 @@ bool Collition(struct SDL_Rect player, struct SDL_Rect ball){
 	int px, py,i;
 	int ball_x = ball.x + ball.w/2;/// Ball mid X
 	int ball_y = ball.y + ball.h/2;/// Ball mid Y
-	int ball_r = 25/2;
+	int ball_r = ball.w/2;
 	double dis, dis_y, dis_x;
-
-	fprintf(stderr,"%d\n\n%d\n", ball.w, player.h );
-
-    perror(">VI ÄR INNE!!!!!\n\n");
 
 	// Check closest box x from the ball
 	for(i=0;i<ball.w;i++)  
@@ -279,17 +287,11 @@ bool Collition(struct SDL_Rect player, struct SDL_Rect ball){
 		else{
 			py = ball.y + i;
 		}
-		perror("BALL:");
-        fprintf(stderr, "%d\n", ball_r);
-        perror("DISTANCE:");
-        fprintf(stderr,"%f\n", distance(ball_x,ball_y,px,py) );
-
+	
 		if( distance(ball_x,ball_y,px,py) < ball_r){
-			perror("COLLISION\n\n");
 			return true;
 		}
 	}
-	perror("ICKE COLLISION\n\n");
 	return false;
 }
 
@@ -301,65 +303,19 @@ void *ball_move(void *input)
     p->counter=0;
     FPS_Init();
 
+    //Start spelet
+    resetPlayerPosition();
+    RestartBall(rcball);
+    angle = rand() % 361;
+    newDirectionBall(angle,rcball);
+    sprintf(message, "ball.x %d", rcball.x);
+    Broadcast_Packet(message, packet);
+    sprintf(message, "ball.y %d", rcball.y);
+    Broadcast_Packet(message, packet);
+
     while(!gameover)
     {
-        ///PLAYER2s WALL
-        if(rcball.y < 1){ ///Touched the top of the screen
-            points[2]--;
-            strcpy(message, "score");
-            Broadcast_Packet(message, packet);
-
-
-          RestartBall(rcball); /// resets ball position and speed
-          angle = rand() % 361;/// reset angel to a random one
-          newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
-          points_made ++;/// add 1 to points made in the game
-        }
-
-
-        ///PLAYER1s WALL
-        else if(rcball.y > (SCREEN_HEIGHT - rcball.h - 1) ){ /// touched the bottom of the screen
-            points[1]--;
-            strcpy(message, "score");
-            Broadcast_Packet(message, packet);
-
-
-          RestartBall(rcball); /// resets ball position and speed
-          angle = rand() % 361; /// reset angel to a random one
-          newDirectionBall(angle,rcball); /// starts ball in a new direction from center ( bacause we did resetball before)
-          points_made ++; /// add 1 to points made in the game
-        }
-
-        /// PLAYER3s WALL
-        else if(rcball.x < 1){
-            points[3]--;
-            strcpy(message, "score");
-            Broadcast_Packet(message, packet);
-
-
-            RestartBall(rcball);    /// resets ball position and speed
-            angle = rand() % 361;/// reset angel to a random one
-            newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
-            points_made ++;/// add 1 to points made in the game
-        }
-
-        ///PLAYER4s WALL
-        else if(rcball.x > (SCREEN_WIDTH - rcball.w -1)){
-        	points[4]--;
-        	strcpy(message, "score");
-            Broadcast_Packet(message, packet);
-
-
-          RestartBall(rcball);  /// resets ball position and speed
-          angle = rand() % 361;/// reset angel to a random one
-          newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
-          points_made ++;/// add 1 to points made in the game
-        }
-
-        //PLAYERS POINTS
-        sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
-        Broadcast_Packet(message, packet);
-
+        //Look for collision
         if (Collition(rcPlayer1, rcball))/// Returns true if collition is detected //if(rcball.y > rcPlayer1.y)///
         {
             perror("True");
@@ -414,6 +370,77 @@ void *ball_move(void *input)
             }
             rcball.x -= 5;/// to avoid geting stuck and adds a "bounce"-effect
             newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+        }
+
+
+                //Look if it has scored a gol
+        ///PLAYER2s WALL
+        if(rcball.y < 1){ ///Touched the top of the screen
+            points[2]--;
+            strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+
+            //PLAYERS POINTS
+            sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
+            Broadcast_Packet(message, packet);
+
+            RestartBall(rcball); /// resets ball position and speed
+            angle = rand() % 361;/// reset angel to a random one
+            newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
+            points_made ++;/// add 1 to points made in the game
+            SDL_Delay(2000);
+        }
+
+
+        ///PLAYER1s WALL
+        else if(rcball.y > (SCREEN_HEIGHT - rcball.h - 1) ){ /// touched the bottom of the screen
+            points[1]--;
+            strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+
+            //PLAYERS POINTS
+            sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
+            Broadcast_Packet(message, packet);
+
+            RestartBall(rcball); /// resets ball position and speed
+            angle = rand() % 361; /// reset angel to a random one
+            newDirectionBall(angle,rcball); /// starts ball in a new direction from center ( bacause we did resetball before)
+            points_made ++; /// add 1 to points made in the game
+            SDL_Delay(2000);
+        }
+
+        /// PLAYER3s WALL
+        else if(rcball.x < 1){
+            points[3]--;
+            strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+
+            //PLAYERS POINTS
+            sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
+            Broadcast_Packet(message, packet);
+
+            RestartBall(rcball);    /// resets ball position and speed
+            angle = rand() % 361;/// reset angel to a random one
+            newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
+            points_made ++;/// add 1 to points made in the game
+            SDL_Delay(2000);
+        }
+
+        ///PLAYER4s WALL
+        else if(rcball.x > (SCREEN_WIDTH - rcball.w -1)){
+            points[4]--;
+            strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+
+            //PLAYERS POINTS
+            sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
+            Broadcast_Packet(message, packet);
+
+            RestartBall(rcball);  /// resets ball position and speed
+            angle = rand() % 361;/// reset angel to a random one
+            newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
+            points_made ++;/// add 1 to points made in the game
+            SDL_Delay(2000);
         }
 
         MoveBall(rcball);
@@ -530,29 +557,10 @@ void Player_Action()
 
 }
 
-void resetPlayerPosition(){
- ///Start position Player1
-	rcPlayer1.x = SCREEN_WIDTH/2-75;
-	rcPlayer1.y = SCREEN_HEIGHT-50;
-	///Start position Player2
-	rcPlayer2.x = SCREEN_WIDTH/2-75;
-    rcPlayer2.y = 25;
-	///Start position Player3
-	rcPlayer3.x = 25;
-	rcPlayer3.y = SCREEN_HEIGHT/2-75;
-	///Start position Player4
-	rcPlayer4.x = SCREEN_WIDTH-50;
-	rcPlayer4.y = SCREEN_HEIGHT/2-75;
-}
-
-
-
-
 int main(int argc, char **argv)
 {
     srand(time(NULL));
-	///Init_Game;;;; Gör en sådant funktion!!!!!!!!!!
-
+	
     if (enet_initialize()!=0)
     {
         fprintf(stderr,"An error ocurred while initializing ENet.\n");
@@ -581,9 +589,9 @@ int main(int argc, char **argv)
     }
 
     ///Connection loop
-    while(New_Client<4)
+    while(New_Client<1)
     {
-        /* if we had some event that interested us*/
+        // Look for new clients untill you get 4
         enet_host_service(server, &event, 1000);
         printf("Waiting for clients......\n");
         switch (event.type)
@@ -603,10 +611,14 @@ int main(int argc, char **argv)
                     printf("%d\n", New_Client);
                     break;
 
+            case ENET_EVENT_TYPE_RECEIVE:
+                    enet_packet_destroy(event.packet);
+                    break;
+
         }
     }
 
-    ///Nu har vi 4 clienter ta emot info om players and ball
+    ///Now there are 4 players so get info om players and the ball
     if (enet_host_service (server, &event, 2000) > 0 &&
        event.type == ENET_EVENT_TYPE_RECEIVE)
     {
@@ -623,16 +635,11 @@ int main(int argc, char **argv)
 
     }
     
-    //Start spelet
-    resetPlayerPosition();
-    RestartBall(rcball);
-    angle = rand() % 361;
-    newDirectionBall(angle,rcball);
-
-
-    ///Create a Thread to make all operations and send data to clients
+    ///Create a thread gameloop
     pthread_create(&Thread_id, NULL, &ball_move, &input);
+    resetPlayerPosition();
 
+    //Main thread receive packets, decode them and send back info about players
     while(!gameover)
     {
         while(enet_host_service(server, &event, 0))

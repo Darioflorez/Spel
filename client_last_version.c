@@ -19,18 +19,18 @@ SDL_Event event;
 bool gameover = false;
 bool FAILURE = false;
 bool SUCCESS = true;
+bool GOAL = false;
 
 ///Thread
 struct event input;
 pthread_t Thread_id;
-const int FRAME_PER_SECOND = 20;
+const int FRAME_PER_SECOND = 30;
 int Intervall;
 ///Time controll
 int NextTick;
 
 
 ///NEW VARIABLES
-
 void Send_Players_and_Ball_Info()
 {
 
@@ -146,7 +146,7 @@ bool connect_to_server()
             return FAILURE;
         }
 
-        else if(strcmp((char *)netevent.packet->data, "player4") == 0)
+        else if(strcmp((char *)netevent.packet->data, "player1") == 0)
         {
             strcpy(me,(char *)netevent.packet->data);
             //Skicka data om players and ball
@@ -165,25 +165,13 @@ bool connect_to_server()
 }
 
 
-//Det Sista vi gjorde igår
-void printScore() /// prints "score" on the screen
-{
-    int i;
-    for(i=0;i<60;i++)/// Loop must be there otherwise it gets really f-uped and only shows "score" for 1ms
-  {
-    SDL_BlitSurface(scoreMade, NULL, ScreenSurface, &rcscoreMade);
-    SDL_UpdateWindowSurface( Window );
-    SDL_Delay( 20 );
-  }
-}
-
-
 void *deal_with_input(void* input)
 {
     perror("Thread Created\n");
     /* Cast the cookie pointer to the right type. */
     struct event* p = (struct event*) input;
     fprintf(stderr, "%s", p->me);
+    int n = 0;
     FPS_Init();
 
     while(!gameover)
@@ -245,10 +233,26 @@ void *deal_with_input(void* input)
                 break;
             }
         }
-        ///Frames per second
-        FPS_Fn();
-        ///Apply the image
-        Update_The_Surface();
+
+        if (GOAL) //Print Score on the screen
+        {
+            n = 35;
+            GOAL = false;
+        }
+        else
+        {   ///Frames per second
+            FPS_Fn();
+            ///Apply the image
+            Update_The_Surface();
+            if(n > 0)
+            {
+
+                SDL_BlitSurface(scoreMade, NULL, ScreenSurface, &rcscoreMade);
+                n--;
+            }
+            SDL_UpdateWindowSurface( Window );
+        
+        }
     }
 }
 
@@ -315,7 +319,7 @@ void decode_packet(char* packet)
 
    else if (strstr(packet, "score"))
    {
-    printScore();
+       GOAL = true; 
    }
 }
 

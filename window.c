@@ -27,10 +27,20 @@ SDL_Surface* Player2 = NULL;
 SDL_Surface* Player3 = NULL;
 SDL_Surface* Player4 = NULL;
 
+SDL_Surface* Player1_text = NULL;
+SDL_Surface* Player2_text = NULL;
+SDL_Surface* Player3_text = NULL;
+SDL_Surface* Player4_text =NULL;
+
 SDL_Rect rcPlayer1;
 SDL_Rect rcPlayer2;
 SDL_Rect rcPlayer3;
 SDL_Rect rcPlayer4;
+
+SDL_Rect rcPlayer1_text;
+SDL_Rect rcPlayer2_text;
+SDL_Rect rcPlayer3_text;
+SDL_Rect rcPlayer4_text;
 
 //Score
 SDL_Surface* text1;
@@ -193,6 +203,33 @@ bool loadMedia()
         return -1;
     }
 
+    scoreMade = TTF_RenderText_Blended(font4, "SCORE!", color[0]);
+    if(scoreMade==NULL)
+    {
+        return -1;
+    }
+
+    Player1_text = TTF_RenderText_Blended(font2, "Player 1: ", color[0]);
+    if(Player1_text == NULL)
+    {
+        return -1;
+    }
+    Player2_text = TTF_RenderText_Blended(font2, "Player 2: ", color[0]);
+    if(Player2_text == NULL)
+    {
+        return -1;
+    }
+    Player3_text = TTF_RenderText_Blended_Wrapped(font2, "P l a y e r 3", color[0],15);
+    if(Player3_text == NULL)
+    {
+        return -1;
+    }
+    Player4_text = TTF_RenderText_Blended_Wrapped(font2, "P l a y e r 4", color[0],15);
+    if(Player4_text == NULL)
+    {
+        return -1;
+    }
+
 
 
 	///Start position Player1
@@ -208,9 +245,21 @@ bool loadMedia()
 	rcPlayer4.x = SCREEN_WIDTH-50;
 	rcPlayer4.y = SCREEN_HEIGHT/2-75;
 
+	//Players text
+	rcPlayer1_text.x = SCREEN_WIDTH/2-100;
+    rcPlayer1_text.y = SCREEN_HEIGHT-20;
+    rcPlayer2_text.x = SCREEN_WIDTH/2-100;
+    rcPlayer2_text.y = 0;
+    rcPlayer3_text.x = 0;
+    rcPlayer3_text.y = SCREEN_HEIGHT/2-100;
+    rcPlayer4_text.x = SCREEN_WIDTH-15;
+    rcPlayer4_text.y = SCREEN_HEIGHT/2-100;
+
+    //Balls start position
 	rcball.x = SCREEN_WIDTH/2-30;
     rcball.y = SCREEN_HEIGHT/2-30;
 
+    //Hearts
     rctext1.x = SCREEN_WIDTH/2-100;
     rctext1.y = SCREEN_HEIGHT-20;
     rctext2.x = SCREEN_WIDTH/2-100;
@@ -219,6 +268,10 @@ bool loadMedia()
     rctext3.y = SCREEN_HEIGHT/2-100;
     rctext4.x = SCREEN_WIDTH-20;
     rctext4.y = SCREEN_HEIGHT/2-100;
+
+    rcscoreMade.x = SCREEN_WIDTH/2-120; /// Center of the screen
+    rcscoreMade.y = SCREEN_HEIGHT/2-30;
+
 
 
 

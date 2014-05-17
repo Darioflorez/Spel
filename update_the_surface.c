@@ -15,7 +15,13 @@ int Update_The_Surface()
     SDL_BlitSurface(text3, NULL, ScreenSurface, &rctext3);
     SDL_BlitSurface(text4, NULL, ScreenSurface, &rctext4);
 
+    /*if(GOAL)
+    {
+        SDL_BlitSurface(scoreMade, NULL, ScreenSurface, &rcscoreMade);
+
+    }*/
+
     ///Update the surface
-    SDL_UpdateWindowSurface( Window );
+    //SDL_UpdateWindowSurface( Window );
     return 0;
 }

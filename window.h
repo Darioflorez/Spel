@@ -16,6 +16,8 @@
 #include <SDL2/SDL_mixer.h>
 
 
+extern bool GOAL;
+
 ///The window we'll be rendering to
 extern SDL_Window *Window;
 ///The surface contained by the window
@@ -40,10 +42,20 @@ extern SDL_Surface* Player2;
 extern SDL_Surface* Player3;
 extern SDL_Surface* Player4;
 
+extern SDL_Surface* Player1_text;
+extern SDL_Surface* Player2_text;
+extern SDL_Surface* Player3_text;
+extern SDL_Surface* Player4_text;
+
 extern SDL_Rect rcPlayer1;
 extern SDL_Rect rcPlayer2;
 extern SDL_Rect rcPlayer3;
 extern SDL_Rect rcPlayer4;
+
+extern SDL_Rect rcPlayer1_text;
+extern SDL_Rect rcPlayer2_text;
+extern SDL_Rect rcPlayer3_text;
+extern SDL_Rect rcPlayer4_text;
 
 //Score
 extern SDL_Surface* text1;
