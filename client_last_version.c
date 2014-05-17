@@ -31,6 +31,10 @@ int NextTick;
 
 
 ///NEW VARIABLES
+int points_made = 0;
+char wall[20];
+
+
 void Send_Players_and_Ball_Info()
 {
 
@@ -55,7 +59,6 @@ void FPS_Init()
     Intervall = 1*1000/FRAME_PER_SECOND;
     return;
 }
-
 
 int disconnect_from_server()
 {
@@ -173,6 +176,8 @@ void *deal_with_input(void* input)
     fprintf(stderr, "%s", p->me);
     int n = 0;
     FPS_Init();
+    //Wall extra live
+    strcpy(wall, "");
 
     while(!gameover)
     {
@@ -310,17 +315,21 @@ void decode_packet(char* packet)
         text2 = TTF_RenderText_Blended(font3, score[points[2]], colors[points[2]]);
         text3 = TTF_RenderText_Blended_Wrapped(font3, score[points[3]], colors[points[3]],30);
         text4 = TTF_RenderText_Blended_Wrapped(font3, score[points[4]], colors[points[4]],30);
-
-            printf(">points1: %d\n", points[1]);
-            printf(">points2: %d\n", points[2]);
-            printf(">points3: %d\n", points[3]);
-            printf(">points4: %d\n", points[4]);
    }
-
    else if (strstr(packet, "score"))
    {
        GOAL = true; 
    }
+   else if (strstr(packet, "pmade"))
+   {
+       sscanf (packet, "%s %d", tmp, &points_made);
+   }
+   else if(strstr(packet, "wall"))
+   {
+        strcpy(wall, packet);
+        printf(">WALL:%s!!!!!!!!\n", wall);
+   }
+
 }
 
 int main(int argc, char **argv)

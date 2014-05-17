@@ -16,8 +16,8 @@
 #define RIGHT 2
 #define UP  3
 #define DOWN 4
-#define SCREEN_WIDTH  640
-#define SCREEN_HEIGHT  480
+#define SCREEN_WIDTH  900
+#define SCREEN_HEIGHT  700
 
 
 struct event
@@ -300,7 +300,7 @@ void *ball_move(void *input)
 {
   /* Cast the cookie pointer to the right type. */
     struct event* p = (struct event*) input;
-    p->counter=0;
+    int counter = 0;
     FPS_Init();
 
     //Start spelet
@@ -377,7 +377,11 @@ void *ball_move(void *input)
         ///PLAYER2s WALL
         if(rcball.y < 1){ ///Touched the top of the screen
             points[2]--;
+            points_made ++; /// add 1 to points made in the game
             strcpy(message, "score");
+            Broadcast_Packet(message, packet);
+
+            sprintf(message, "pmade %d", points_made);
             Broadcast_Packet(message, packet);
 
             //PLAYERS POINTS
@@ -395,6 +399,11 @@ void *ball_move(void *input)
         ///PLAYER1s WALL
         else if(rcball.y > (SCREEN_HEIGHT - rcball.h - 1) ){ /// touched the bottom of the screen
             points[1]--;
+            points_made ++; /// add 1 to points made in the game
+
+            sprintf(message, "pmade %d", points_made);
+            Broadcast_Packet(message, packet);
+
             strcpy(message, "score");
             Broadcast_Packet(message, packet);
 
@@ -405,13 +414,17 @@ void *ball_move(void *input)
             RestartBall(rcball); /// resets ball position and speed
             angle = rand() % 361; /// reset angel to a random one
             newDirectionBall(angle,rcball); /// starts ball in a new direction from center ( bacause we did resetball before)
-            points_made ++; /// add 1 to points made in the game
             SDL_Delay(2000);
         }
 
         /// PLAYER3s WALL
         else if(rcball.x < 1){
             points[3]--;
+            points_made ++;/// add 1 to points made in the game
+
+            sprintf(message, "pmade %d", points_made);
+            Broadcast_Packet(message, packet);
+
             strcpy(message, "score");
             Broadcast_Packet(message, packet);
 
@@ -422,13 +435,17 @@ void *ball_move(void *input)
             RestartBall(rcball);    /// resets ball position and speed
             angle = rand() % 361;/// reset angel to a random one
             newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
-            points_made ++;/// add 1 to points made in the game
             SDL_Delay(2000);
         }
 
         ///PLAYER4s WALL
         else if(rcball.x > (SCREEN_WIDTH - rcball.w -1)){
             points[4]--;
+            points_made ++;/// add 1 to points made in the game
+
+            sprintf(message, "pmade %d", points_made);
+            Broadcast_Packet(message, packet);
+
             strcpy(message, "score");
             Broadcast_Packet(message, packet);
 
@@ -439,8 +456,16 @@ void *ball_move(void *input)
             RestartBall(rcball);  /// resets ball position and speed
             angle = rand() % 361;/// reset angel to a random one
             newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
-            points_made ++;/// add 1 to points made in the game
             SDL_Delay(2000);
+        }
+        for(counter = 1; counter < 6; counter++)
+        {
+
+            if( points[counter] == 9)
+            {
+                sprintf(message, "wall play%d ", counter);
+                Broadcast_Packet(message, packet); 
+            }
         }
 
         MoveBall(rcball);

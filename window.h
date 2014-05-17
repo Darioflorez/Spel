@@ -57,6 +57,26 @@ extern SDL_Rect rcPlayer2_text;
 extern SDL_Rect rcPlayer3_text;
 extern SDL_Rect rcPlayer4_text;
 
+//invisible players
+extern SDL_Surface* InvisablePlayer1;
+extern SDL_Surface* InvisablePlayer2;
+extern SDL_Surface* InvisablePlayer3;
+extern SDL_Surface* InvisablePlayer4;
+
+//Wall
+extern SDL_Surface* wall_p1;
+extern SDL_Rect rcwall_p1;
+extern char wall[20];
+
+extern SDL_Surface* wall_p2;
+extern SDL_Rect rcwall_p2;
+
+extern SDL_Surface* wall_p3;
+extern SDL_Rect rcwall_p3;
+
+extern SDL_Surface* wall_p4;
+extern SDL_Rect rcwall_p4;
+
 //Score
 extern SDL_Surface* text1;
 extern SDL_Surface* text2;
@@ -70,6 +90,7 @@ extern SDL_Rect rctext4;
 
 
 extern int points[5];
+extern int points_made;
 
 ///Font
 extern TTF_Font* font;

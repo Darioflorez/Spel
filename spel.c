@@ -264,6 +264,7 @@ void FPS_Fn()
     NextTick = SDL_GetTicks() + Intervall;
 }
 
+//Do not be used in the networking game
 void checkEffects(int points, int player)
 { /// Points made in the game, which player point is made on
   if(points_made == 5){
@@ -632,6 +633,8 @@ void close()
 	SDL_Quit();
 }
 
+
+//Do not be used in the same way on the networking version of the game
 void printScore() /// prints "score" on the screen
 {
 	int i;
