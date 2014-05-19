@@ -25,7 +25,7 @@ struct event
     int counter;
 };
 
-double acc_vel = 5;
+double acc_vel = 0;
 double angle = 0;
 double scale_x= 0, scale_y=0;
 double Resultante=0;
@@ -47,6 +47,7 @@ void FPS_Init();
 struct event input;
 pthread_t Thread_id;
 bool gameover = false;
+bool restart_the_game = true;
 const double    PI = 3.14159265;
 int acc_distance;
 int player1_input;
@@ -57,10 +58,13 @@ ENetPacket *Thread_packet;
 char Thread_message[MAX];
 ENetHost *server;
 
-///NY VAR
-int points[5]={0,9,9,9,9};
-int points_made = 0;
+//Wall extra live
+SDL_Rect rcwall_p1;
+SDL_Rect rcwall_p2;
+SDL_Rect rcwall_p3;
+SDL_Rect rcwall_p4;
 
+int wall_life;
 
 
 ///Det var i main
@@ -70,13 +74,12 @@ ENetEvent event;
 ENetEvent event_game;
 ENetPacket *packet;
 int eventStatus;
-int New_Client = 0;
 char return_message[50];
 char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 80;
+const int FRAME_PER_SECOND = 60; //80fps ger bra resultat//
 int Intervall;
 ///Time controll
 int NextTick;
@@ -296,11 +299,23 @@ bool Collition(struct SDL_Rect player, struct SDL_Rect ball){
 }
 
 
-void *ball_move(void *input)
+void *ball_move(void *arg)
 {
-  /* Cast the cookie pointer to the right type. */
-    struct event* p = (struct event*) input;
     int counter = 0;
+    bool extra_life = true;
+    //Wall info
+    wall_life = 0;
+    rcwall_p1.x = 0;
+    rcwall_p1.y = SCREEN_HEIGHT-20;
+    rcwall_p2.x = 0;
+    rcwall_p2.y = 0;
+    rcwall_p3.x = 0;
+    rcwall_p3.y = 0;
+    rcwall_p4.x = SCREEN_WIDTH-20;
+    rcwall_p4.y = 0;
+    int points[5]={0,9,9,9,9};
+    int points_made = 0;
+
     FPS_Init();
 
     //Start spelet
@@ -312,9 +327,65 @@ void *ball_move(void *input)
     Broadcast_Packet(message, packet);
     sprintf(message, "ball.y %d", rcball.y);
     Broadcast_Packet(message, packet);
+    SDL_Delay(2000);
 
+
+    //Server gameloop
     while(!gameover)
     {
+        
+        if(wall_life)
+        {
+            switch (wall_life)
+            {
+                case 1: //player 1
+                    if(Collition(rcwall_p1, rcball))
+                    { ///Collision with bonus wall
+                        angle = 360 - angle;
+                        rcball.y -= 5;
+                        newDirectionBall(angle,rcball);
+                        strcpy(message, "wall fin");
+                        Broadcast_Packet(message, packet);
+                        wall_life = 0;
+                    }
+                    break;
+                case 2: //player 2
+                    if(Collition(rcwall_p2, rcball))
+                    { ///Collision with bonus wall
+                        angle = 360 - angle;
+                        rcball.y += 5;
+                        newDirectionBall(angle,rcball);
+                        strcpy(message, "wall fin");
+                        Broadcast_Packet(message, packet);
+                        wall_life = 0;
+                    }
+                    break;
+                case 3: //player 3
+                    if(Collition(rcwall_p3, rcball))
+                    { ///Collision with bonus wall
+                        angle = 180 - angle;
+                        rcball.x += 5;
+                        newDirectionBall(angle,rcball);
+                        strcpy(message, "wall fin");
+                        Broadcast_Packet(message, packet);
+                        wall_life = 0;
+                    }
+                    break;
+                case 4: //player 4
+                    if(Collition(rcwall_p4, rcball))
+                    { ///Collision with bonus wall
+                        angle = 180 - angle;
+                        rcball.x -= 5;
+                        newDirectionBall(angle,rcball);
+                        strcpy(message, "wall fin");
+                        Broadcast_Packet(message, packet);
+                        wall_life = 0;
+                    }
+                    break;
+            }
+        }
+
+
         //Look for collision
         if (Collition(rcPlayer1, rcball))/// Returns true if collition is detected //if(rcball.y > rcPlayer1.y)///
         {
@@ -388,6 +459,17 @@ void *ball_move(void *input)
             sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
             Broadcast_Packet(message, packet);
 
+            if (extra_life)
+            {
+                if( points[2] == 1)
+                {
+                    strcpy(message, "wall play2");
+                    Broadcast_Packet(message, packet); 
+                    extra_life = false;
+                    wall_life = 2;
+                }
+            }
+
             RestartBall(rcball); /// resets ball position and speed
             angle = rand() % 361;/// reset angel to a random one
             newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
@@ -411,6 +493,17 @@ void *ball_move(void *input)
             sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
             Broadcast_Packet(message, packet);
 
+            if (extra_life)
+            {
+                if( points[1] == 1)
+                {
+                    strcpy(message, "wall play1");
+                    Broadcast_Packet(message, packet); 
+                    extra_life = false;
+                    wall_life = 1;
+                }
+            }
+
             RestartBall(rcball); /// resets ball position and speed
             angle = rand() % 361; /// reset angel to a random one
             newDirectionBall(angle,rcball); /// starts ball in a new direction from center ( bacause we did resetball before)
@@ -431,6 +524,17 @@ void *ball_move(void *input)
             //PLAYERS POINTS
             sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
             Broadcast_Packet(message, packet);
+
+            if (extra_life)
+            {
+                if( points[3] == 1)
+                {
+                    strcpy(message, "wall play3");
+                    Broadcast_Packet(message, packet); 
+                    extra_life = false;
+                    wall_life = 3;
+                }
+            }
 
             RestartBall(rcball);    /// resets ball position and speed
             angle = rand() % 361;/// reset angel to a random one
@@ -453,20 +557,32 @@ void *ball_move(void *input)
             sprintf(message, "points %d %d %d %d", points[1], points[2], points[3], points[4]);
             Broadcast_Packet(message, packet);
 
+            if (extra_life)
+            {
+                if( points[4] == 1)
+                {
+                    strcpy(message, "wall play4");
+                    Broadcast_Packet(message, packet); 
+                    extra_life = false;
+                    wall_life = 4;
+                }
+            }
+
             RestartBall(rcball);  /// resets ball position and speed
             angle = rand() % 361;/// reset angel to a random one
             newDirectionBall(angle,rcball);/// starts ball in a new direction from center ( bacause we did resetball before)
             SDL_Delay(2000);
         }
-        for(counter = 1; counter < 6; counter++)
-        {
 
-            if( points[counter] == 9)
-            {
-                sprintf(message, "wall play%d ", counter);
-                Broadcast_Packet(message, packet); 
-            }
+
+        //Look if some player lost
+        if(points[1]==0 || points[2]==0 || points[3]== 0 || points[4]==0)
+        {
+            strcpy(message, "gameover");
+            Broadcast_Packet(message, packet);
+            pthread_exit(NULL);
         }
+
 
         MoveBall(rcball);
         sprintf(message, "ball.x %d", rcball.x);
@@ -582,37 +698,10 @@ void Player_Action()
 
 }
 
-int main(int argc, char **argv)
-{
-    srand(time(NULL));
-	
-    if (enet_initialize()!=0)
-    {
-        fprintf(stderr,"An error ocurred while initializing ENet.\n");
-        return EXIT_FAILURE;
-    }
-    atexit(enet_deinitialize);
-
-    /*Bind the server to the default host. */
-    /*A specific host address can be specified by
-    enet_address_set_host(& address, "x.x.x.x");*/
-
-    address.host = ENET_HOST_ANY;
-    /*Bind the server to port 5950*/
-    address.port = 5950;
-
-    server = enet_host_create(& address, ///The address to bind the server host to
-                              4,         ///Allow up to 2 clients and/or outgoing connetions
-                              2,         ///Allow up to 2 channels to be used, 0 and 1
-                              0,         ///Assume any amunt of incoming bandwidth
-                              0          ///Assume any amount of utgoing bandwidth
-                                );
-    if (server == NULL)
-    {
-       fprintf(stderr, "An error occurred while trying to create an ENet server host. \n");
-       exit(EXIT_FAILURE);
-    }
-
+int look_for_clients_and_start_the_game()
+{   
+    int New_Client = 0;
+    gameover = false;
     ///Connection loop
     while(New_Client<1)
     {
@@ -649,19 +738,29 @@ int main(int argc, char **argv)
     {
 
         int i;
-        sscanf ((char*)event.packet->data, "%d %d %d %d %d %d", 
-            &rcPlayer1.w, &rcPlayer1.h, &rcball.w, &rcball.h, &rcPlayer3.w, &rcPlayer3.h);
+        sscanf ((char*)event.packet->data, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d", 
+            &rcPlayer1.w, &rcPlayer1.h, &rcball.w, &rcball.h, &rcPlayer3.w, &rcPlayer3.h,
+            &rcwall_p1.w, &rcwall_p1.h, &rcwall_p2.w, &rcwall_p2.h, &rcwall_p3.w, &rcwall_p3.h,
+            &rcwall_p4.w, &rcwall_p4.h);
 
         rcPlayer2.w = rcPlayer1.w;
         rcPlayer2.h = rcPlayer1.h;
 
         rcPlayer4.w = rcPlayer3.w;
         rcPlayer4.h = rcPlayer3.h;
-
     }
     
     ///Create a thread gameloop
-    pthread_create(&Thread_id, NULL, &ball_move, &input);
+    if (pthread_create(&Thread_id, NULL, &ball_move, NULL) !=0)
+    {
+        perror("pthread_create() error!");
+        exit (1);
+    }
+    else
+    {
+        printf("\nThread created successfully\n");
+    }
+
     resetPlayerPosition();
 
     //Main thread receive packets, decode them and send back info about players
@@ -681,13 +780,61 @@ int main(int argc, char **argv)
 
                 case ENET_EVENT_TYPE_DISCONNECT:
                     printf("Client disconected....\n\nGAME OVER!!!\n\n");
+                    strcpy(message, "gameover");
+                    Broadcast_Packet(message, packet);
                     gameover = true;
                     break;
-
             }
         }
     }
-    pthread_join(Thread_id, NULL);
+    return 0;
+}
+
+int main(int argc, char **argv)
+{
+    srand(time(NULL));
+	
+    if (enet_initialize()!=0)
+    {
+        fprintf(stderr,"An error ocurred while initializing ENet.\n");
+        return EXIT_FAILURE;
+    }
+    atexit(enet_deinitialize);
+
+    /*Bind the server to the default host. */
+    /*A specific host address can be specified by
+    enet_address_set_host(& address, "x.x.x.x");*/
+
+    address.host = ENET_HOST_ANY;
+    /*Bind the server to port 5950*/
+    address.port = 5950;
+
+    server = enet_host_create(& address, ///The address to bind the server host to
+                              4,         ///Allow up to 2 clients and/or outgoing connetions
+                              2,         ///Allow up to 2 channels to be used, 0 and 1
+                              0,         ///Assume any amunt of incoming bandwidth
+                              0          ///Assume any amount of utgoing bandwidth
+                                );
+    if (server == NULL)
+    {
+       fprintf(stderr, "An error occurred while trying to create an ENet server host. \n");
+       exit(EXIT_FAILURE);
+    }
+
+    while(restart_the_game)
+    {
+        look_for_clients_and_start_the_game();
+        if (pthread_join(Thread_id, NULL) != 0) 
+        {
+            perror("pthread_join() error\n");
+            exit(3);
+        }
+        else
+        {
+            printf("pthread_join() successfully\n\n");
+        }
+    }
+
     enet_host_destroy(server);
     enet_deinitialize();
     return EXIT_SUCCESS;

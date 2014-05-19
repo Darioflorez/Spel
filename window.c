@@ -1,8 +1,5 @@
 #include "window.h"
 
-///Screen dimension constants
-#define SCREEN_WIDTH 900
-#define SCREEN_HEIGHT 700
 
 ///The window we'll be rendering to
 SDL_Window *Window = NULL;
@@ -305,6 +302,17 @@ bool loadMedia()
     	success = false;
  	}
 
+    //Blitsurface to save the data of the wall players and ball to send to the server
+    SDL_BlitSurface(wall_p1, NULL, ScreenSurface, &rcwall_p1);
+    SDL_BlitSurface(wall_p2, NULL, ScreenSurface, &rcwall_p2);
+    SDL_BlitSurface(wall_p3, NULL, ScreenSurface, &rcwall_p3);
+    SDL_BlitSurface(wall_p4, NULL, ScreenSurface, &rcwall_p4);
+    SDL_BlitSurface(Player1, NULL, ScreenSurface, &rcPlayer1);
+    SDL_BlitSurface(Player2, NULL, ScreenSurface, &rcPlayer2);
+    SDL_BlitSurface(Player3, NULL, ScreenSurface, &rcPlayer3);
+    SDL_BlitSurface(Player4, NULL, ScreenSurface, &rcPlayer4);
+    SDL_BlitSurface(Ball, NULL, ScreenSurface, &rcball);
+
 	///Start position Player1
 	rcPlayer1.x = SCREEN_WIDTH/2-75;
 	rcPlayer1.y = SCREEN_HEIGHT-50;
@@ -329,8 +337,8 @@ bool loadMedia()
     rcPlayer4_text.y = SCREEN_HEIGHT/2-100;
 
     //Balls start position
-	rcball.x = SCREEN_WIDTH/2-30;
-    rcball.y = SCREEN_HEIGHT/2-30;
+    rcball.x = SCREEN_WIDTH/2-rcball.w;
+    rcball.y = SCREEN_HEIGHT/2-rcball.h;
 
     //Hearts
     rctext1.x = SCREEN_WIDTH/2-100;

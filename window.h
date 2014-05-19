@@ -15,8 +15,13 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
+///Screen dimension constants
+#define SCREEN_WIDTH 900
+#define SCREEN_HEIGHT 700
 
 extern bool GOAL;
+extern bool FAILURE;
+extern bool print_gameover;
 
 ///The window we'll be rendering to
 extern SDL_Window *Window;
@@ -66,7 +71,8 @@ extern SDL_Surface* InvisablePlayer4;
 //Wall
 extern SDL_Surface* wall_p1;
 extern SDL_Rect rcwall_p1;
-extern char wall[20];
+extern char wall_play[20];
+extern bool wall;
 
 extern SDL_Surface* wall_p2;
 extern SDL_Rect rcwall_p2;
@@ -98,13 +104,28 @@ extern TTF_Font* font2;
 extern TTF_Font* font3;
 extern TTF_Font* font4;
 
+//end of game
+extern SDL_Rect rcendofgame;
+extern SDL_Surface* endofgame;
+
 extern SDL_Color colors[1000];
 extern SDL_Color color[2];
 extern const char* score[1000];
 
+
+///The Music
+extern Mix_Chunk* effect;
+extern Mix_Music* music;
+extern double test;
+
 extern bool create_window();
 extern bool loadMedia();
 extern void close();
-extern int GameLoop();
 extern int Update_The_Surface();
+extern int mainMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
+extern int nextMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
+extern int instMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
+extern bool loadMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
+extern bool connect_to_server();
+extern int game_over_and_restart_the_game();
 #endif // WINDOW_H_INCLUDED

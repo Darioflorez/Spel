@@ -23,25 +23,25 @@ int Update_The_Surface()
         SDL_BlitSurface(Player4, NULL, ScreenSurface, &rcPlayer4);
     }
 
-    if (strstr(wall, "wall"))
+    if (wall)
     {
-        if(strstr(wall, "play1"))
+        if(strstr(wall_play, "play1"))
         {
             SDL_BlitSurface(wall_p1, NULL, ScreenSurface, &rcwall_p1);
         }
-        else if(strstr(wall, "play2"))
+        else if(strstr(wall_play, "play2"))
         {
             SDL_BlitSurface(wall_p2, NULL, ScreenSurface, &rcwall_p2);
         }
-        else if(strstr(wall, "playr3"))
+        else if(strstr(wall_play, "playr3"))
         {
             SDL_BlitSurface(wall_p3, NULL, ScreenSurface, &rcwall_p3);
         }
-        else if(strstr(wall, "play4"))
+        else if(strstr(wall_play, "play4"))
         {
             SDL_BlitSurface(wall_p4, NULL, ScreenSurface, &rcwall_p4);
         }
-        strcpy(wall, "");
+        //strcpy(wall_play, "");
     }
 
     SDL_BlitSurface(text1, NULL, ScreenSurface, &rctext1);
@@ -51,5 +51,29 @@ int Update_The_Surface()
 
     ///Update the surface
     //SDL_UpdateWindowSurface( Window );
+    return 0;
+}
+
+int game_over_and_restart_the_game()
+{
+    for(int i=0;i<=60;i++)
+    {
+        font4 = TTF_OpenFont("good.ttf", i);
+        rcendofgame.x = ScreenSurface->clip_rect.w/2-rcendofgame.w/2;
+        rcendofgame.y = SCREEN_HEIGHT/2-30;
+        endofgame = TTF_RenderText_Blended(font4,"GAME OVER!",color[0]);
+        SDL_BlitSurface( XOut, NULL, ScreenSurface, NULL );
+        SDL_BlitSurface(endofgame, NULL, ScreenSurface, &rcendofgame);
+        SDL_UpdateWindowSurface( Window );
+        SDL_Delay( 20 );
+    }  
+    SDL_Delay( 3000 );
+
+    points[0]=0;
+    points[1]=9;
+    points[2]=9;
+    points[3]=9;
+    points[4]=9;
+    points_made = 0;
     return 0;
 }

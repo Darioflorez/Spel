@@ -99,9 +99,6 @@ void resetPlayerPosition(){
   rcPlayer4.y = SCREEN_WIDTH/2-75;
 }
 
-
-
-
 double angleEffect(struct SDL_Rect ball, struct SDL_Rect player, int playernum)
 {
   int ball_x,ball_y;
@@ -591,11 +588,6 @@ bool loadMedia()
 	rcPlayer4.x = SCREEN_WIDTH-50;
 	rcPlayer4.y = SCREEN_HEIGHT/2-75;
 
-
-	/*//Start ball position
-    rcball.x = SCREEN_WIDTH/2-30;
-    rcball.y = SCREEN_HEIGHT/2-30;*/
-
     ///Load StartMenu
     if(!loadMenu(gWindow, gScreenSurface, font, effect))
     {
@@ -696,6 +688,9 @@ int main( int argc, char* args[] )
 			///While application is running
 			while( !gameover )
 			{
+
+        printf(">>>%d!!!\n",rcwall_p1.w );
+        printf("%d\n",rcwall_p1.h );
 				///Look for events
 				if( SDL_PollEvent( &event ) )
 				{
@@ -965,6 +960,8 @@ int main( int argc, char* args[] )
           newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
 				}
 
+
+        //Continue here
 				if(life1==1)/// This is collition detection on the "wall of extra life", it will always bounce in an 90degree angle away from that wall
         {
 					if(Collition(rcwall_p1, rcball))
@@ -1104,8 +1101,7 @@ int main( int argc, char* args[] )
           angle = rand() % 361;
           newDirectionBall(angle,rcball);
         }
-
-			}/// End of while loop
+      }/// End of while loop
 		}
 	}
 

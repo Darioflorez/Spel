@@ -360,6 +360,7 @@ int instMenu(SDL_Window* gWindow, SDL_Surface* gScreenSurface, TTF_Font* font, M
                                     SDL_FreeSurface(Menu[i]);
                                     if(i==0)
                                     {
+                                        
                                         return 0;
                                     }
                                     return 1;
@@ -393,23 +394,19 @@ bool loadMenu(SDL_Window* gWindow, SDL_Surface* gScreenSurface, TTF_Font* font, 
 {
     bool success = true;
     int i = mainMenu(gWindow,gScreenSurface,font,effect);
-    if(i==0)
-    {
-        nextMenu(gWindow,gScreenSurface,font,effect);
-    }
-    else if(i==2)
+    if(i==2)
     {
         int j = instMenu(gWindow,gScreenSurface,font,effect);
         if(j==0)
         {
-            nextMenu(gWindow,gScreenSurface,font,effect);
+            success = true;
         }
         else
         {
             success =  false;
         }
     }
-    else
+    else if(i==1)
     {
         success = false;
     }

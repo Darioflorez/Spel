@@ -20,6 +20,9 @@ bool gameover = false;
 bool FAILURE = false;
 bool SUCCESS = true;
 bool GOAL = false;
+bool wall = false;
+bool print_gameover = false;
+bool play_the_game = true;
 
 ///Thread
 struct event input;
@@ -32,16 +35,28 @@ int NextTick;
 
 ///NEW VARIABLES
 int points_made = 0;
-char wall[20];
+char wall_play[20];
+
+///The Music
+Mix_Chunk* effect;
+Mix_Music* music;
+double test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
+
+//End of game
+SDL_Rect rcendofgame;
+SDL_Surface* endofgame = NULL;
 
 
 void Send_Players_and_Ball_Info()
 {
 
-    sprintf(message,"%d %d %d %d %d %d", 
-        rcPlayer1.w, rcPlayer1.h, rcball.w, rcball.h, rcPlayer3.w, rcPlayer3.h);
+    sprintf(message,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d", 
+        rcPlayer1.w, rcPlayer1.h, rcball.w, rcball.h, rcPlayer3.w, rcPlayer3.h,
+        rcwall_p1.w, rcwall_p1.h, rcwall_p2.w, rcwall_p2.h, rcwall_p3.w, rcwall_p3.h,
+        rcwall_p4.w, rcwall_p4.h);
     packet = enet_packet_create(message, sizeof(message) +1, ENET_PACKET_FLAG_RELIABLE);
     enet_peer_send(peer, 0, packet);
+    printf(">>>%s\n!!",message);
 }
 
 void FPS_Fn()
@@ -75,8 +90,9 @@ int disconnect_from_server()
                 break;
             case ENET_EVENT_TYPE_DISCONNECT:
                 puts ("Disconnection succeeded.....");
+                enet_deinitialize();
                 ///Free resources and close SDL
-                close();
+                //close();
                 return 0;
         }
     }
@@ -84,7 +100,7 @@ int disconnect_from_server()
     ///succeed yet. Force the connection down.
     enet_peer_reset (peer);
     ///Free resources and close SDL
-	close();
+	//close();
 	enet_deinitialize();
     return 0;
 
@@ -170,14 +186,13 @@ bool connect_to_server()
 
 void *deal_with_input(void* input)
 {
-    perror("Thread Created\n");
     /* Cast the cookie pointer to the right type. */
     struct event* p = (struct event*) input;
-    fprintf(stderr, "%s", p->me);
+    fprintf(stderr, ">%s", p->me);
     int n = 0;
-    FPS_Init();
     //Wall extra live
-    strcpy(wall, "");
+    strcpy(wall_play, "");
+    FPS_Init();
 
     while(!gameover)
     {
@@ -233,7 +248,6 @@ void *deal_with_input(void* input)
                         enet_peer_send(peer, 0, packet);
                         strcpy(message, "");
                         break;
-
                 }
                 break;
             }
@@ -256,9 +270,9 @@ void *deal_with_input(void* input)
                 n--;
             }
             SDL_UpdateWindowSurface( Window );
-        
         }
     }
+    pthread_exit (NULL);
 }
 
 void decode_packet(char* packet)
@@ -316,25 +330,97 @@ void decode_packet(char* packet)
         text3 = TTF_RenderText_Blended_Wrapped(font3, score[points[3]], colors[points[3]],30);
         text4 = TTF_RenderText_Blended_Wrapped(font3, score[points[4]], colors[points[4]],30);
    }
+   //When someone score a goal SCORE comes up on he screen
    else if (strstr(packet, "score"))
    {
        GOAL = true; 
    }
+   //This is used to count how many points have been scored along the game
+   //Every five points scored all the players become invisible
    else if (strstr(packet, "pmade"))
    {
        sscanf (packet, "%s %d", tmp, &points_made);
    }
+
+   //The first player to reach 1 point get a extra live in form of a wall
    else if(strstr(packet, "wall"))
    {
-        strcpy(wall, packet);
-        printf(">WALL:%s!!!!!!!!\n", wall);
+        if(strstr (packet, "play"))
+        {
+            strcpy(wall_play, packet);
+            wall = true;
+        }
+        else if (strstr(packet, "fin"))
+        {
+            wall = false;
+            strcpy(wall_play, "");
+        }
    }
-
+   else if(strstr(packet, "gameover"))
+   {
+        gameover = true;
+   }
 }
+
+int go_to_menu_and_connect_to_the_server()
+{
+    gameover = false;
+    if(!loadMenu(Window, ScreenSurface, font, effect))
+    {
+        printf("Failed to load menu!\n");
+        return EXIT_FAILURE;
+    }
+
+    ///thread arguments and create thread
+    strcpy(input.me, me);
+    if (pthread_create(&Thread_id, NULL, &deal_with_input, &input) != 0) 
+    {
+        perror("pthread_create() error");
+        exit(1);
+    }
+    else
+    {
+        printf("\nThread created successfully\n");
+    }
+
+
+    //FPS_Init();
+    while(!gameover)
+    {
+        // If we had some netevent that interested us
+        while(enet_host_service(client, &netevent, 0))
+        {
+            switch(netevent.type)
+            {
+                case ENET_EVENT_TYPE_RECEIVE:
+                    printf("(Client) Message from server : %s\n", netevent.packet->data);
+                    decode_packet((char *)netevent.packet->data);
+                    enet_packet_destroy(netevent.packet);
+                    break;
+
+                case ENET_EVENT_TYPE_DISCONNECT:
+                    printf("(Client) %s Server disconnected.....\n\nGAME OVER!!!", (char* )netevent.peer->data);
+                    gameover = true;
+                    /// Reset client's information
+                    netevent.peer->data = NULL;
+                    break;
+
+                case ENET_EVENT_TYPE_NONE:
+                    break;
+            }
+        //Frames per second
+        //FPS_Fn();
+        ///Apply the image
+        //Update_The_Surface();
+        }
+    }
+    return 0;
+}
+
+
 
 int main(int argc, char **argv)
 {
-    pthread_t Thread_id;
     ///Start up SDL and create window
 	if( !create_window())
 	{
@@ -349,84 +435,32 @@ int main(int argc, char **argv)
 		}
 		else
 		{
-            ///Event handler
-            ///#################Här måste menyn slängas in######################
-			Update_The_Surface();
-			if (connect_to_server() == FAILURE)
-			{
-                return EXIT_FAILURE;
-			}
-
-
-			///thread arguments and create thread
-			strcpy(input.me, me);
-			pthread_create(&Thread_id, NULL, &deal_with_input, &input);
-
-			/*while( !Next )
-			{
-                if( SDL_PollEvent( &event ) )
-                {
-                    ///An event was found
-                    switch (event.type)
-                    {
-                        ///Close button clicked
-                        case SDL_QUIT:
-                        gameover = true;
-                        Next = true;
-                        break;
-                        ///Handle the keybord
-                        case SDL_KEYDOWN:
-                            switch (event.key.keysym.sym)
-                            {
-                                case SDLK_ESCAPE:
-                                case SDLK_q:
-                                gameover = true;
-                                Next = true;
-                                break;
-
-                                case SDLK_TAB:
-                                Next = true;
-                                break;
-                            }
-                        break;
-                    }
-                }
-            }*/
-            //FPS_Init();
-            while(!gameover)
+            while(play_the_game)
             {
-                    // If we had some netevent that interested us
-                while(enet_host_service(client, &netevent, 0))
+
+                if (go_to_menu_and_connect_to_the_server() == EXIT_FAILURE)
                 {
-                    switch(netevent.type)
-                    {
-                        case ENET_EVENT_TYPE_RECEIVE:
-                            printf("(Client) Message from server : %s\n", netevent.packet->data);
-                            decode_packet((char *)netevent.packet->data);
-                            enet_packet_destroy(netevent.packet);
-                            break;
-
-                        case ENET_EVENT_TYPE_DISCONNECT:
-                            printf("(Client) %s Server disconnected.....\n\nGAME OVER!!!", (char* )netevent.peer->data);
-                            gameover = true;
-                            /// Reset client's information
-                            netevent.peer->data = NULL;
-                            break;
-
-                        case ENET_EVENT_TYPE_NONE:
-                            break;
-                    }
+                    play_the_game = false;
+                    disconnect_from_server();
+                    ///Free resources and close SDL
+                    close();
+                    return EXIT_FAILURE;
                 }
-                ///Frames per second
-        //FPS_Fn();
-        ///Apply the image
-        //Update_The_Surface();
+                if (pthread_join(Thread_id, NULL) != 0) 
+                {
+                    perror("pthread_join() error");
+                    exit(3);
+                }
+                else
+                {
+                    printf("pthread_join() successfully\n\n");
+                }
+                game_over_and_restart_the_game();
+                disconnect_from_server();
             }
-
         }
-
     }
-    pthread_join(Thread_id, NULL);
-    disconnect_from_server();
+    ///Free resources and close SDL
+    //close();
     return EXIT_SUCCESS;
 }
