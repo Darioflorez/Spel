@@ -27,7 +27,7 @@ bool play_the_game = true;
 ///Thread
 struct event input;
 pthread_t Thread_id;
-const int FRAME_PER_SECOND = 10; //30 gick bra
+const int FRAME_PER_SECOND = 30; //30 gick bra
 int Intervall;
 ///Time controll
 int NextTick;
@@ -255,7 +255,7 @@ void *deal_with_input(void* input)
 
         if (GOAL) //Print Score on the screen
         {
-            n = 25; //35 går bra
+            n = 20; //35 går bra
             GOAL = false;
         }
         else

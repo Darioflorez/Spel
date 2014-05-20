@@ -79,7 +79,7 @@ char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 50; //80fps ger bra resultat//
+const int FRAME_PER_SECOND = 80; //80fps ger bra resultat//
 int Intervall;
 ///Time controll
 int NextTick;
@@ -136,7 +136,7 @@ void newDirectionBall(double angle, struct SDL_Rect &ball)
 
 void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
 {
-  acc_vel = 5;
+  acc_vel = 3;
   acc_distance = 0;
   ball.x = SCREEN_WIDTH/2-ball.w;
   ball.y = SCREEN_HEIGHT/2-ball.h;
