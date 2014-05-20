@@ -3,7 +3,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "Window.h"
+#include "window.h"
 #define MainNum 3
 #define NextNum 2
 
