@@ -231,7 +231,7 @@ void newDirectionBall(double angle, struct SDL_Rect &ball)
 
 void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
 {
-  acc_vel = 10;
+  acc_vel = 13;
   acc_distance = 0;
   ball.x = SCREEN_WIDTH/2-30;
   ball.y = SCREEN_HEIGHT/2-30;
@@ -710,7 +710,7 @@ int main( int argc, char* args[] )
                                 break;
 
                             case SDLK_LEFT:
-                                rcPlayer1.x -= 30;
+                                rcPlayer1.x -= 40;
                                 if(rcPlayer1.x < 0 )
                                 {
                                     rcPlayer1.x = 0;
@@ -718,7 +718,7 @@ int main( int argc, char* args[] )
                                 break;
 
                             case SDLK_RIGHT:
-                                rcPlayer1.x += 30;
+                                rcPlayer1.x += 40;
                                 if(rcPlayer1.x > SCREEN_WIDTH - 150)
                                 {
                                     rcPlayer1.x = SCREEN_WIDTH - 150;
@@ -726,7 +726,7 @@ int main( int argc, char* args[] )
                                 break;
 
                             case SDLK_a:
-                                rcPlayer2.x -= 30;
+                                rcPlayer2.x -= 40;
                                 if(rcPlayer2.x < 0 )
                                 {
                                     rcPlayer2.x = 0;
@@ -734,7 +734,7 @@ int main( int argc, char* args[] )
                                 break;
 
                             case SDLK_d:
-                                rcPlayer2.x += 30;
+                                rcPlayer2.x += 40;
                                 if(rcPlayer2.x > SCREEN_WIDTH - 150)
                                 {
                                     rcPlayer2.x = SCREEN_WIDTH - 150;
@@ -742,7 +742,7 @@ int main( int argc, char* args[] )
                                 break;
 
                             case SDLK_w:
-                                rcPlayer3.y -= 30;
+                                rcPlayer3.y -= 40;
                                 if(rcPlayer3.y < 0 )
                                 {
                                     rcPlayer3.y = 0;
@@ -750,7 +750,7 @@ int main( int argc, char* args[] )
                                 break;
 
                             case SDLK_s:
-                                rcPlayer3.y += 30;
+                                rcPlayer3.y += 40;
                                 if(rcPlayer3.y > SCREEN_HEIGHT - 150)
                                 {
                                     rcPlayer3.y = SCREEN_HEIGHT - 150;
@@ -758,7 +758,7 @@ int main( int argc, char* args[] )
                                 break;
 
                             case SDLK_UP:
-                                rcPlayer4.y -= 30;
+                                rcPlayer4.y -= 40;
                                 if(rcPlayer4.y < 0 )
                                 {
                                     rcPlayer4.y = 0;
@@ -766,7 +766,7 @@ int main( int argc, char* args[] )
                                 break;
 
                             case SDLK_DOWN:
-                                rcPlayer4.y += 30;
+                                rcPlayer4.y += 40;
                                 if(rcPlayer4.y > SCREEN_HEIGHT - 150)
                                 {
                                     rcPlayer4.y = SCREEN_HEIGHT - 150;

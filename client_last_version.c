@@ -409,7 +409,7 @@ int go_to_menu_and_connect_to_the_server()
                 case ENET_EVENT_TYPE_NONE:
                     break;
             }
-        SDL_Delay(1000/60); //hämta 60 packet varje sekund
+        //SDL_Delay(1000/60); //hämta 60 packet varje sekund
         //Frames per second
         //FPS_Fn();
         ///Apply the image

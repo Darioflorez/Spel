@@ -111,7 +111,7 @@ void FPS_Init()
 
 void Broadcast_Packet(char *message, ENetPacket *packet)
 {
-    packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_SENT); //ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT
+    packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); //ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT
     enet_host_broadcast (server, 0, packet);                                              //ENET_PACKET_FLAG_RELIABLE
 }                                                                                         //ENET_PACKET_FLAG_SENT
                                                                                           //ENET_PACKET_FLAG_UNSEQUENCED 
