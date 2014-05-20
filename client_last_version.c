@@ -165,7 +165,7 @@ bool connect_to_server()
             return FAILURE;
         }
 
-        else if(strcmp((char *)netevent.packet->data, "player1") == 0)
+        else if(strcmp((char *)netevent.packet->data, "player4") == 0)
         {
             strcpy(me,(char *)netevent.packet->data);
             //Skicka data om players and ball
@@ -188,7 +188,7 @@ void *deal_with_input(void* input)
 {
     /* Cast the cookie pointer to the right type. */
     struct event* p = (struct event*) input;
-    fprintf(stderr, ">%s", p->me);
+    //fprintf(stderr, ">%s", p->me);
     int n = 0;
     //Wall extra live
     strcpy(wall_play, "");
@@ -255,7 +255,7 @@ void *deal_with_input(void* input)
 
         if (GOAL) //Print Score on the screen
         {
-            n = 35; //35 går bra
+            n = 25; //35 går bra
             GOAL = false;
         }
         else

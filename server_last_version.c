@@ -702,7 +702,7 @@ int look_for_clients_and_start_the_game()
     int New_Client = 0;
     gameover = false;
     ///Connection loop
-    while(New_Client<1)
+    while(New_Client<4)
     {
         // Look for new clients untill you get 4
         enet_host_service(server, &event, 1000);
