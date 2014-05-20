@@ -27,7 +27,7 @@ bool play_the_game = true;
 ///Thread
 struct event input;
 pthread_t Thread_id;
-const int FRAME_PER_SECOND = 30;
+const int FRAME_PER_SECOND = 10; //30 gick bra
 int Intervall;
 ///Time controll
 int NextTick;
@@ -255,12 +255,11 @@ void *deal_with_input(void* input)
 
         if (GOAL) //Print Score on the screen
         {
-            n = 35;
+            n = 35; //35 går bra
             GOAL = false;
         }
         else
-        {   ///Frames per second
-            FPS_Fn();
+        {   
             ///Apply the image
             Update_The_Surface();
             if(n > 0)
@@ -269,6 +268,8 @@ void *deal_with_input(void* input)
                 SDL_BlitSurface(scoreMade, NULL, ScreenSurface, &rcscoreMade);
                 n--;
             }
+            ///Frames per second
+            FPS_Fn();
             SDL_UpdateWindowSurface( Window );
         }
     }
@@ -408,6 +409,7 @@ int go_to_menu_and_connect_to_the_server()
                 case ENET_EVENT_TYPE_NONE:
                     break;
             }
+        SDL_Delay(1000/60); //hämta 60 packet varje sekund
         //Frames per second
         //FPS_Fn();
         ///Apply the image

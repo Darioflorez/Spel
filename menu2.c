@@ -377,7 +377,7 @@ int instMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
                                             return 0;
                                         }
                                     }
-                                    return 1;/////////// 1
+                                    return 1;
                                 }
                             }
                         case SDLK_ESCAPE:

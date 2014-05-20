@@ -79,7 +79,7 @@ char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 60; //80fps ger bra resultat//
+const int FRAME_PER_SECOND = 50; //80fps ger bra resultat//
 int Intervall;
 ///Time controll
 int NextTick;
@@ -111,11 +111,10 @@ void FPS_Init()
 
 void Broadcast_Packet(char *message, ENetPacket *packet)
 {
-    packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE);
-    enet_host_broadcast (server, 0, packet);
-
-}
-
+    packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_SENT); //ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT
+    enet_host_broadcast (server, 0, packet);                                              //ENET_PACKET_FLAG_RELIABLE
+}                                                                                         //ENET_PACKET_FLAG_SENT
+                                                                                          //ENET_PACKET_FLAG_UNSEQUENCED 
 void newDirectionBall(double angle, struct SDL_Rect &ball)
 {
     acc_distance = 0;
@@ -137,7 +136,7 @@ void newDirectionBall(double angle, struct SDL_Rect &ball)
 
 void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
 {
-  acc_vel = 2;
+  acc_vel = 5;
   acc_distance = 0;
   ball.x = SCREEN_WIDTH/2-ball.w;
   ball.y = SCREEN_HEIGHT/2-ball.h;
@@ -599,7 +598,7 @@ void Player_Action()
     switch(player1_input)
     {
         case LEFT:
-            rcPlayer1.x -= 20;
+            rcPlayer1.x -= 30;
             if(rcPlayer1.x < 0 )
             {
                 rcPlayer1.x = 0;
@@ -610,7 +609,7 @@ void Player_Action()
             break;
 
         case RIGHT:
-            rcPlayer1.x += 20;
+            rcPlayer1.x += 30;
             if(rcPlayer1.x > SCREEN_WIDTH - 150)
             {
                 rcPlayer1.x = SCREEN_WIDTH - 150;
@@ -624,7 +623,7 @@ void Player_Action()
     switch(player2_input)
     {
         case LEFT:
-            rcPlayer2.x -= 20;
+            rcPlayer2.x -= 30;
             if(rcPlayer2.x < 0 )
             {
                 rcPlayer2.x = 0;
@@ -635,7 +634,7 @@ void Player_Action()
             break;
 
             case RIGHT:
-                rcPlayer2.x += 20;
+                rcPlayer2.x += 30;
                 if(rcPlayer2.x > SCREEN_WIDTH - 150)
                 {
                     rcPlayer2.x = SCREEN_WIDTH - 150;
@@ -649,7 +648,7 @@ void Player_Action()
     switch(player3_input)
     {
         case UP:
-            rcPlayer3.y -= 20;
+            rcPlayer3.y -= 30;
             if(rcPlayer3.y < 0 )
             {
                 rcPlayer3.y = 0;
@@ -660,7 +659,7 @@ void Player_Action()
             break;
 
         case DOWN:
-            rcPlayer3.y += 20;
+            rcPlayer3.y += 30;
             if(rcPlayer3.y > SCREEN_HEIGHT - 150)
             {
                 rcPlayer3.y = SCREEN_HEIGHT - 150;
@@ -674,7 +673,7 @@ void Player_Action()
     switch(player4_input)
     {
         case UP:
-            rcPlayer4.y -= 20;
+            rcPlayer4.y -= 30;
             if(rcPlayer4.y < 0 )
             {
                 rcPlayer4.y = 0;
@@ -685,7 +684,7 @@ void Player_Action()
             break;
 
         case DOWN:
-            rcPlayer4.y += 20;
+            rcPlayer4.y += 30;
             if(rcPlayer4.y > SCREEN_HEIGHT - 150)
             {
                 rcPlayer4.y = SCREEN_HEIGHT - 150;
