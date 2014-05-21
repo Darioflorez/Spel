@@ -139,7 +139,7 @@ bool loadMedia()
 	}
 
 	///Load a ball
-	Ball = SDL_LoadBMP("ball4.bmp");
+	Ball = SDL_LoadBMP("metal_ball.bmp");
 	if(Ball == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "ball.bmp", SDL_GetError() );

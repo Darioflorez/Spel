@@ -136,7 +136,7 @@ void newDirectionBall(double angle, struct SDL_Rect &ball)
 
 void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
 {
-  acc_vel = 8;
+  acc_vel = 12;
   acc_distance = 0;
   ball.x = SCREEN_WIDTH/2-ball.w;
   ball.y = SCREEN_HEIGHT/2-ball.h;
