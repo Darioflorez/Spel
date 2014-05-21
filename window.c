@@ -144,7 +144,7 @@ bool loadMedia()
 	}
 
 	///Load a ball
-	Ball = SDL_LoadBMP("metal_ball2.bmp");
+	Ball = SDL_LoadBMP("neon_ball4.bmp");
 	if(Ball == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "ball.bmp", SDL_GetError() );
@@ -152,25 +152,25 @@ bool loadMedia()
 	}
 
 	///Load all Players
-	Player1 = SDL_LoadBMP("steep_p1_p2.bmp");
+	Player1 = SDL_LoadBMP("neon3_p1_p2.bmp");
 	if(Player1 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "block_p1_p2.bmp", SDL_GetError() );
 		success = false;
 	}
-	Player2 = SDL_LoadBMP("block_p1_p2.bmp");
+	Player2 = SDL_LoadBMP("neon3_p1_p2.bmp");
 	if(Player2 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "block_p1_p2.bmp", SDL_GetError() );
 		success = false;
 	}
-	Player3 = SDL_LoadBMP("steep_p3_p4.bmp");
+	Player3 = SDL_LoadBMP("neon3_p3_p4.bmp");
 	if(Player3 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "rectangle_blue.bmp", SDL_GetError() );
 		success = false;
 	}
-	Player4 = SDL_LoadBMP("block_p3_p4.bmp");
+	Player4 = SDL_LoadBMP("neon3_p3_p4.bmp");
 	if(Player3 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "rectangle4.bmp", SDL_GetError() );
