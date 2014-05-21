@@ -60,6 +60,11 @@ SDL_Rect rcwall_p3;
 SDL_Surface* wall_p4 = NULL;
 SDL_Rect rcwall_p4;
 
+//Music
+//Mix_Chunk* effect;
+//Mix_Music* music;
+//double test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
+
 
 //Score
 SDL_Surface* text1;
@@ -303,6 +308,12 @@ bool loadMedia()
     	success = false;
  	}
 
+
+    //Load music
+    test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
+    music = Mix_LoadMUS("beat.wav");
+    effect = Mix_LoadWAV("low.wav");
+
     //Blitsurface to save the data of the wall players and ball to send to the server
     SDL_BlitSurface(wall_p1, NULL, ScreenSurface, &rcwall_p1);
     SDL_BlitSurface(wall_p2, NULL, ScreenSurface, &rcwall_p2);
@@ -386,9 +397,9 @@ void close()
 	SDL_DestroyWindow( Window );
 	Window = NULL;
 
-	//Mix_FreeChunk(effect);
-	//Mix_FreeMusic(music);
-	//Mix_CloseAudio();
+	Mix_FreeChunk(effect);
+	Mix_FreeMusic(music);
+	Mix_CloseAudio();
 	TTF_CloseFont(font);
 	TTF_Quit();
 	///Quit SDL subsystems

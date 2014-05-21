@@ -670,8 +670,6 @@ int main( int argc, char* args[] )
 		else
 		{
 
-      //Mix_PlayMusic(music,-1);
-
 			///Main loop flag
 			bool gameover = false;
 
@@ -688,6 +686,7 @@ int main( int argc, char* args[] )
 			///While application is running
 			while( !gameover )
 			{
+        Mix_PlayMusic(music,-1);
 				///Look for events
 				if( SDL_PollEvent( &event ) )
 				{
