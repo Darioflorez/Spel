@@ -65,6 +65,7 @@ Mix_Chunk* effect;
 Mix_Chunk* music_start;
 Mix_Music* music;
 Mix_Chunk* collision;
+Mix_Chunk* GM_over;
 double test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
 
 
@@ -315,7 +316,8 @@ bool loadMedia()
     music = Mix_LoadMUS("beat.wav");
     effect = Mix_LoadWAV("low.wav");
     music_start = Mix_LoadWAV("space_start.wav");
-    collision = Mix_LoadWAV("collision.wav");
+    collision = Mix_LoadWAV("LASER.wav");
+    GM_over = Mix_LoadWAV("GameOver.wav");
 
 
 
@@ -330,18 +332,18 @@ bool loadMedia()
     SDL_BlitSurface(Player4, NULL, ScreenSurface, &rcPlayer4);
     SDL_BlitSurface(Ball, NULL, ScreenSurface, &rcball);
 
-	///Start position Player1
-    rcPlayer1.x = SCREEN_WIDTH/2-rcPlayer1.w;
+	  ///Start position Player1
+    rcPlayer1.x = SCREEN_WIDTH/2-rcPlayer1.w/2;   //Funkar bra rcPlayer1.x = SCREEN_WIDTH/2-100;
     rcPlayer1.y = SCREEN_HEIGHT-50;
     ///Start position Player2
-    rcPlayer2.x = SCREEN_WIDTH/2-rcPlayer2.w;
+    rcPlayer2.x = SCREEN_WIDTH/2-rcPlayer1.w/2;
     rcPlayer2.y = 25;
     ///Start position Player3
     rcPlayer3.x = 25;
-    rcPlayer3.y = SCREEN_HEIGHT/2-rcPlayer3.w;
+    rcPlayer3.y = SCREEN_HEIGHT/2-rcPlayer1.w/2;
     ///Start position Player4
     rcPlayer4.x = SCREEN_WIDTH-50;
-    rcPlayer4.y = SCREEN_HEIGHT/2-rcPlayer4.w;
+    rcPlayer4.y = SCREEN_HEIGHT/2-rcPlayer1.w/2;
 
 	//Players text
 	rcPlayer1_text.x = SCREEN_WIDTH/2-100;
@@ -354,18 +356,18 @@ bool loadMedia()
     rcPlayer4_text.y = SCREEN_HEIGHT/2-100;
 
     //Balls start position
-    rcball.x = SCREEN_WIDTH/2-rcball.w;
-    rcball.y = SCREEN_HEIGHT/2-rcball.h;
+    rcball.x = SCREEN_WIDTH/2-(rcball.w/2);
+    rcball.y = SCREEN_HEIGHT/2-(rcball.h/2);
 
     //Hearts
-    rctext1.x = SCREEN_WIDTH/2-100;
+    rctext1.x = SCREEN_WIDTH/2-((rcPlayer1.w/2)-10);
     rctext1.y = SCREEN_HEIGHT-20;
-    rctext2.x = SCREEN_WIDTH/2-100;
+    rctext2.x = SCREEN_WIDTH/2-((rcPlayer1.w/2)-10);
     rctext2.y = 0;
     rctext3.x = 0;
-    rctext3.y = SCREEN_HEIGHT/2-100;
+    rctext3.y = SCREEN_HEIGHT/2-((rcPlayer1.w/2)-10);
     rctext4.x = SCREEN_WIDTH-20;
-    rctext4.y = SCREEN_HEIGHT/2-100;
+    rctext4.y = SCREEN_HEIGHT/2-((rcPlayer1.w/2)-10);
 
     rcscoreMade.x = SCREEN_WIDTH/2-120; /// Center of the screen
     rcscoreMade.y = SCREEN_HEIGHT/2-30;

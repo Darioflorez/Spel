@@ -185,6 +185,7 @@ void *deal_with_input(void* input)
     struct event* p = (struct event*) input;
     //fprintf(stderr, ">%s", p->me);
     int n = 0;
+    //char ThreadStatus[] = "exit";
     //Wall extra live
     strcpy(wall_play, "");
     FPS_Init();
@@ -201,6 +202,7 @@ void *deal_with_input(void* input)
             ///Close button clicked
             case SDL_QUIT:
                 gameover = true;
+                pthread_exit((void*)42);
                 break;
 
             ///Handle the keybord
@@ -209,7 +211,7 @@ void *deal_with_input(void* input)
                 {
                     case SDLK_ESCAPE:
                     case SDLK_q:
-                        gameover = true;
+                        gameover = true; //Return to main menu and disconnect from the server
                         break;
 
                     case SDLK_LEFT:
@@ -268,7 +270,7 @@ void *deal_with_input(void* input)
             SDL_UpdateWindowSurface( Window );
         }
     }
-    pthread_exit (NULL);
+    pthread_exit ((void*) 0);
 }
 
 void decode_packet(char* packet)
@@ -370,10 +372,17 @@ void decode_packet(char* packet)
 int go_to_menu_and_connect_to_the_server()
 {
     gameover = false;
-    if(!loadMenu(Window, ScreenSurface, font, effect))
+    int controll=0;
+    //Load menu and connect to the server
+    controll = loadMenu(Window, ScreenSurface, font, effect);
+    if(controll < 0)
     {
         printf("Failed to load menu!\n");
-        return EXIT_FAILURE;
+        return -1;
+    }
+    else if(controll==2)
+    {
+        return 2; //Close the window
     }
 
     ///thread arguments and create thread
@@ -412,6 +421,7 @@ int go_to_menu_and_connect_to_the_server()
                     gameover = true;
                     /// Reset client's information
                     netevent.peer->data = NULL;
+                    return -1;
                     break;
 
                 case ENET_EVENT_TYPE_NONE:
@@ -432,6 +442,8 @@ int go_to_menu_and_connect_to_the_server()
 int main(int argc, char **argv)
 {
     ///Start up SDL and create window
+    int controll = 0;
+    int JoinThread = 0;
 	if( !create_window())
 	{
 		printf( "Failed to initialize!\n" );
@@ -446,9 +458,10 @@ int main(int argc, char **argv)
 		else
 		{
             while(play_the_game)
-            {
+            {   
+                controll = go_to_menu_and_connect_to_the_server(); 
 
-                if (go_to_menu_and_connect_to_the_server() == EXIT_FAILURE)
+                if ( controll < 0)
                 {
                     play_the_game = false;
                     disconnect_from_server();
@@ -456,10 +469,16 @@ int main(int argc, char **argv)
                     close();
                     return EXIT_FAILURE;
                 }
+                else if (controll == 2)
+                {
+                    play_the_game = false;
+                    ///Free resources and close SDL
+                    close();
+                    return EXIT_SUCCESS;
 
-                //AVSLUTNINGS LÅT
+                }
 
-                if (pthread_join(Thread_id, NULL) != 0) 
+                if (pthread_join(Thread_id,(void **) &JoinThread) != 0) 
                 {
                     perror("pthread_join() error");
                     exit(3);
@@ -468,6 +487,25 @@ int main(int argc, char **argv)
                 {
                     printf("pthread_join() successfully\n\n");
                 }
+
+                if(JoinThread != 0) //Exit the game and close the window
+                {
+                    disconnect_from_server();
+                    ///Free resources and close SDL
+                    close();
+                    return EXIT_SUCCESS;
+                }
+                else 
+                {
+                    printf(">>%d\n",JoinThread);
+                }
+
+                //Play sound game over
+                if(Mix_PlayChannel(-1,GM_over,0 )== -1)
+                {
+                    fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+                }
+
                 game_over_and_restart_the_game();
                 disconnect_from_server();
             }

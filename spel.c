@@ -316,6 +316,7 @@ const char* score[] = {" ","D","D D","D D D","D D D D","D D D D D","D D D D D D"
 ///The Music
 Mix_Chunk* effect;
 Mix_Music* music;
+Mix_Chunk* collision;
 double test;
 
 bool init()
@@ -448,7 +449,7 @@ bool loadMedia()
 	}
 
 	///Load a Player1
-	Player1 = SDL_LoadBMP("neon_p1_p2.bmp");
+	Player1 = SDL_LoadBMP("neon3_p1_p2.bmp");
 	if(Player1 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "block_p1.bmp", SDL_GetError() );
@@ -456,14 +457,14 @@ bool loadMedia()
 	}
 
 	///Load a Player2
-	Player2 = SDL_LoadBMP("neon_p1_p2.bmp");
+	Player2 = SDL_LoadBMP("neon3_p1_p2.bmp");
 	if(Player2 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "rectangle_yellow2.bmp", SDL_GetError() );
 		success = false;
 	}
 
-	Player3 = SDL_LoadBMP("block_p3_p4.bmp");
+	Player3 = SDL_LoadBMP("neon3_p3_p4.bmp");
 	if(Player3 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "rectangle_blue.bmp", SDL_GetError() );
@@ -471,7 +472,7 @@ bool loadMedia()
 	}
 
 	///Load a Player2
-	Player4 = SDL_LoadBMP("block_p3_p4.bmp");
+	Player4 = SDL_LoadBMP("neon3_p3_p4.bmp");
 	if(Player3 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "rectangle4.bmp", SDL_GetError() );
@@ -552,14 +553,29 @@ bool loadMedia()
     {
         return -1;
     }
-    rctext1.x = SCREEN_WIDTH/2-100;
+
+
+
+    //Blitsurface to save the data of the wall players and ball to send to the server
+    SDL_BlitSurface(wall_p1, NULL, gScreenSurface, &rcwall_p1);
+    SDL_BlitSurface(wall_p2, NULL, gScreenSurface, &rcwall_p2);
+    SDL_BlitSurface(wall_p3, NULL, gScreenSurface, &rcwall_p3);
+    SDL_BlitSurface(wall_p4, NULL, gScreenSurface, &rcwall_p4);
+    SDL_BlitSurface(Player1, NULL, gScreenSurface, &rcPlayer1);
+    SDL_BlitSurface(Player2, NULL, gScreenSurface, &rcPlayer2);
+    SDL_BlitSurface(Player3, NULL, gScreenSurface, &rcPlayer3);
+    SDL_BlitSurface(Player4, NULL, gScreenSurface, &rcPlayer4);
+    SDL_BlitSurface(Ball, NULL, gScreenSurface, &rcball);
+
+
+    rctext1.x = SCREEN_WIDTH/2-rcPlayer1.w/2;
     rctext1.y = SCREEN_HEIGHT-20;
-    rctext2.x = SCREEN_WIDTH/2-100;
+    rctext2.x = SCREEN_WIDTH/2-rcPlayer2.w/2;
     rctext2.y = 0;
     rctext3.x = 0;
-    rctext3.y = SCREEN_HEIGHT/2-100;
+    rctext3.y = SCREEN_HEIGHT/2-rcPlayer1.w/2;
     rctext4.x = SCREEN_WIDTH-20;
-    rctext4.y = SCREEN_HEIGHT/2-100;
+    rctext4.y = SCREEN_HEIGHT/2-rcPlayer1.w/2;
 
     rcscoreMade.x = SCREEN_WIDTH/2-120; /// Center of the screen
     rcscoreMade.y = SCREEN_HEIGHT/2-30;
@@ -582,6 +598,19 @@ bool loadMedia()
     rcwall_p4.x = SCREEN_WIDTH-20;
     rcwall_p4.y = 0;
 
+      ///Start position Player1
+    rcPlayer1.x = SCREEN_WIDTH/2-rcPlayer1.w/2;   //Funkar bra rcPlayer1.x = SCREEN_WIDTH/2-100;
+    rcPlayer1.y = SCREEN_HEIGHT-50;
+    ///Start position Player2
+    rcPlayer2.x = SCREEN_WIDTH/2-rcPlayer2.w/2;
+    rcPlayer2.y = 25;
+    ///Start position Player3
+    rcPlayer3.x = 25;
+    rcPlayer3.y = SCREEN_HEIGHT/2-rcPlayer1.w/2;
+    ///Start position Player4
+    rcPlayer4.x = SCREEN_WIDTH-50;
+    rcPlayer4.y = SCREEN_HEIGHT/2-rcPlayer1.w/2;
+
     ///Music
     music = Mix_LoadMUS("beat.wav");
     if(music == NULL) 
@@ -596,18 +625,11 @@ bool loadMedia()
       fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
     }
 
-	///Start position Player1
-	rcPlayer1.x = SCREEN_WIDTH/2-75;
-	rcPlayer1.y = SCREEN_HEIGHT-50;
-	///Start position Player2
-	rcPlayer2.x = SCREEN_WIDTH/2-75;
-	rcPlayer2.y = 25;
-	///Start position Player3
-	rcPlayer3.x = 25;
-	rcPlayer3.y = SCREEN_HEIGHT/2-75;
-	///Start position Player4
-	rcPlayer4.x = SCREEN_WIDTH-50;
-	rcPlayer4.y = SCREEN_HEIGHT/2-75;
+    collision = Mix_LoadWAV("LASER.wav");
+    if(collision == NULL) 
+    {
+      fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+    }
 
     ///Load StartMenu
     if(!loadMenu(gWindow, gScreenSurface, font, effect))
@@ -704,14 +726,15 @@ int main( int argc, char* args[] )
       angle = rand() % 361;
       newDirectionBall(angle,rcball);
 
+      /*if(Mix_PlayMusic(music,-1) == -1) 
+        {
+          fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+        }*/
+
 			///While application is running
 			while( !gameover )
 			{
         
-        if(Mix_PlayMusic(music,-1) == -1) 
-        {
-          fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
-        }
 				///Look for events
 				if( SDL_PollEvent( &event ) )
 				{
@@ -743,9 +766,9 @@ int main( int argc, char* args[] )
 
                             case SDLK_RIGHT:
                                 rcPlayer1.x += 40;
-                                if(rcPlayer1.x > SCREEN_WIDTH - 150)
+                                if(rcPlayer1.x > SCREEN_WIDTH - 200)
                                 {
-                                    rcPlayer1.x = SCREEN_WIDTH - 150;
+                                    rcPlayer1.x = SCREEN_WIDTH - 200;
                                 }
                                 break;
 
@@ -759,9 +782,9 @@ int main( int argc, char* args[] )
 
                             case SDLK_d:
                                 rcPlayer2.x += 40;
-                                if(rcPlayer2.x > SCREEN_WIDTH - 150)
+                                if(rcPlayer2.x > SCREEN_WIDTH - 200)
                                 {
-                                    rcPlayer2.x = SCREEN_WIDTH - 150;
+                                    rcPlayer2.x = SCREEN_WIDTH - 200;
                                 }
                                 break;
 
@@ -775,9 +798,9 @@ int main( int argc, char* args[] )
 
                             case SDLK_s:
                                 rcPlayer3.y += 40;
-                                if(rcPlayer3.y > SCREEN_HEIGHT - 150)
+                                if(rcPlayer3.y > SCREEN_HEIGHT - 200)
                                 {
-                                    rcPlayer3.y = SCREEN_HEIGHT - 150;
+                                    rcPlayer3.y = SCREEN_HEIGHT - 200;
                                 }
                                 break;
 
@@ -791,9 +814,9 @@ int main( int argc, char* args[] )
 
                             case SDLK_DOWN:
                                 rcPlayer4.y += 40;
-                                if(rcPlayer4.y > SCREEN_HEIGHT - 150)
+                                if(rcPlayer4.y > SCREEN_HEIGHT - 200)
                                 {
-                                    rcPlayer4.y = SCREEN_HEIGHT - 150;
+                                    rcPlayer4.y = SCREEN_HEIGHT - 200;
                                 }
                                 break;
 
@@ -979,6 +1002,12 @@ int main( int argc, char* args[] )
           }
           rcball.y -= 5;/// to avoid geting stuck and adds a "bounce"-effect
           newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+
+          //Play sound
+          if(Mix_PlayChannel(-1,collision,0 )== -1)
+          {
+              fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+          }
 				}
 
 
@@ -1009,6 +1038,12 @@ int main( int argc, char* args[] )
           }
           rcball.y += 5;/// to avoid geting stuck and adds a "bounce"-effect
     			newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+
+          //Play sound
+          if(Mix_PlayChannel(-1,collision,0 )== -1)
+          {
+              fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+          }
 				}
 
 				if(life2==1)/// This is collition detection on the "wall of extra life", it will always bounce in an 90degree angle away from that wall
@@ -1037,6 +1072,12 @@ int main( int argc, char* args[] )
           }
           rcball.x += 5;/// to avoid geting stuck and adds a "bounce"-effect
     			newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+
+          //Play sound
+          if(Mix_PlayChannel(-1,collision,0 )== -1)
+          {
+              fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+          }
 				}
 
 				if(life3==1) /// This is collition detection on the "wall of extra life", it will always bounce in an 90degree angle away from that wall
@@ -1067,6 +1108,12 @@ int main( int argc, char* args[] )
           }
           rcball.x -= 5;/// to avoid geting stuck and adds a "bounce"-effect
           newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+
+          //Play sound
+          if(Mix_PlayChannel(-1,collision,0 )== -1)
+          {
+              fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+          }
 				}
 
 				if(life4==1)/// This is collition detection on the "wall of extra life", it will always bounce in an 90degree angle away from that wall

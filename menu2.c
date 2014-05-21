@@ -40,7 +40,7 @@ int mainMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
                     {
                         SDL_FreeSurface(Menu[i]);
                     }
-                    return 1;
+                    return 2; //Close the window
                 ///Handle the keyboard
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym)
@@ -114,11 +114,11 @@ int mainMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
                                     }
                                     else if(i==(MainNum-2)) ///instructons
                                     {
-                                        return 2;
+                                        return 3;
                                     }
                                     else if(i==(MainNum-1)) ///exit
                                     {
-                                        return 1;
+                                        return 2;
                                     }
                                 }
                             }
@@ -175,7 +175,7 @@ int nextMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
                     {
                         SDL_FreeSurface(Menu[i]);
                     }
-                    return 1;
+                    return 2; //Close the window
                 ///Handle the keyboard
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym)
@@ -238,13 +238,14 @@ int nextMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
                                     SDL_FreeSurface(Menu[i]);
                                     return 0;
                                 }
+
                             }
                         case SDLK_ESCAPE:
                             for(i=0;i<MainNum;i++)
                             {
                                 SDL_FreeSurface(Menu[i]);
                             }
-                            return 1;
+                            return 2; //Close the window
                     }
                     break;
             }
@@ -304,7 +305,7 @@ int instMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
                     {
                         SDL_FreeSurface(Menu[i]);
                     }
-                    return 1;
+                    return 2; ///Close the window
                 ///Handle the keyboard
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym)
@@ -377,7 +378,14 @@ int instMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
                                             return 0;
                                         }
                                     }
-                                    return 1;
+                                    else if(i==1) ///Exit
+                                    {
+                                        return 2;
+                                    }
+                                    else
+                                    {
+                                        return 1;
+                                    }
                                 }
                             }
                         case SDLK_ESCAPE:
@@ -404,30 +412,33 @@ int instMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
    return 0;
 }
 
-bool loadMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix_Chunk* effect)
+int loadMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix_Chunk* effect)
 {
     bool success = true;
     int i = mainMenu(Window,ScreenSurface,font,effect);
-    if(i==2)
+    if(i==3) //Go to instructions
     {
         int j = instMenu(Window,ScreenSurface,font,effect);
         if(j==0)
         {
-            success = true;
+            return 0;   //0 success
         }
-        else
+        else if(j==1)
         {
-            success =  false;
+            return -1; //1 failure
+        }
+        else if(j==2)
+        {
+            return 2; //Close the window
         }
     }
     else if(i==1)
     {
-        success = false;
+        return -1;
     }
     else if (i==0)
     {
-        success = true;
+        return 0;
     }
 
-    return success;
 }

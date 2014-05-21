@@ -33,7 +33,7 @@ int Update_The_Surface()
         {
             SDL_BlitSurface(wall_p2, NULL, ScreenSurface, &rcwall_p2);
         }
-        else if(strstr(wall_play, "playr3"))
+        else if(strstr(wall_play, "play3"))
         {
             SDL_BlitSurface(wall_p3, NULL, ScreenSurface, &rcwall_p3);
         }
@@ -75,5 +75,27 @@ int game_over_and_restart_the_game()
     points[3]=9;
     points[4]=9;
     points_made = 0;
+
+    ///Start position Player1
+    rcPlayer1.x = SCREEN_WIDTH/2-rcPlayer1.w/2;   //Funkar bra rcPlayer1.x = SCREEN_WIDTH/2-100;
+    rcPlayer1.y = SCREEN_HEIGHT-50;
+    ///Start position Player2
+    rcPlayer2.x = SCREEN_WIDTH/2-rcPlayer1.w/2;
+    rcPlayer2.y = 25;
+    ///Start position Player3
+    rcPlayer3.x = 25;
+    rcPlayer3.y = SCREEN_HEIGHT/2-rcPlayer1.w/2;
+    ///Start position Player4
+    rcPlayer4.x = SCREEN_WIDTH-50;
+    rcPlayer4.y = SCREEN_HEIGHT/2-rcPlayer1.w/2;
+
+    //Balls start position
+    rcball.x = SCREEN_WIDTH/2-(rcball.w/2);
+    rcball.y = SCREEN_HEIGHT/2-(rcball.h/2);
+
+    text1 = TTF_RenderText_Blended(font3, score[points[1]], colors[points[1]]);
+    text2 = TTF_RenderText_Blended(font3, score[points[2]], colors[points[2]]);
+    text3 = TTF_RenderText_Blended_Wrapped(font3, score[points[3]], colors[points[3]],30);
+    text4 = TTF_RenderText_Blended_Wrapped(font3, score[points[4]], colors[points[4]],30);
     return 0;
 }

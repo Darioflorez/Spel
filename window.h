@@ -118,6 +118,7 @@ extern Mix_Chunk* effect;
 extern Mix_Music* music;
 extern Mix_Chunk* music_start;
 extern Mix_Chunk* collision;
+extern Mix_Chunk* GM_over;
 extern double test;
 
 extern bool create_window();
@@ -127,7 +128,7 @@ extern int Update_The_Surface();
 extern int mainMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
 extern int nextMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
 extern int instMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
-extern bool loadMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
+extern int loadMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
 extern bool connect_to_server();
 extern int game_over_and_restart_the_game();
 #endif // WINDOW_H_INCLUDED
