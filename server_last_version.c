@@ -131,7 +131,7 @@ void newDirectionBall(double angle, struct SDL_Rect &ball)
     printf("\nSIN: %f ", scale_y);
     printf("\nCOS: %f ", scale_x);
     printf("\nRESULANTE: %f ", Resultante);*/
-    acc_vel += 0.1;
+    acc_vel += 0.3;
 }
 
 void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
@@ -144,17 +144,17 @@ void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
 
 void resetPlayerPosition(){
  ///Start position Player1
-    rcPlayer1.x = SCREEN_WIDTH/2-75;
+    rcPlayer1.x = SCREEN_WIDTH/2-rcPlayer1.w;
     rcPlayer1.y = SCREEN_HEIGHT-50;
     ///Start position Player2
-    rcPlayer2.x = SCREEN_WIDTH/2-75;
+    rcPlayer2.x = SCREEN_WIDTH/2-rcPlayer2.w;
     rcPlayer2.y = 25;
     ///Start position Player3
     rcPlayer3.x = 25;
-    rcPlayer3.y = SCREEN_HEIGHT/2-75;
+    rcPlayer3.y = SCREEN_HEIGHT/2-rcPlayer3.w;
     ///Start position Player4
     rcPlayer4.x = SCREEN_WIDTH-50;
-    rcPlayer4.y = SCREEN_HEIGHT/2-75;
+    rcPlayer4.y = SCREEN_HEIGHT/2-rcPlayer4.w;
 }
 
 void MoveBall(struct SDL_Rect &ball)

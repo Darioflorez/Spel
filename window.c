@@ -331,17 +331,17 @@ bool loadMedia()
     SDL_BlitSurface(Ball, NULL, ScreenSurface, &rcball);
 
 	///Start position Player1
-	rcPlayer1.x = SCREEN_WIDTH/2-75;
-	rcPlayer1.y = SCREEN_HEIGHT-50;
-	///Start position Player2
-	rcPlayer2.x = SCREEN_WIDTH/2-75;
-	rcPlayer2.y = 25;
-	///Start position Player3
-	rcPlayer3.x = 25;
-	rcPlayer3.y = SCREEN_HEIGHT/2-75;
-	///Start position Player4
-	rcPlayer4.x = SCREEN_WIDTH-50;
-	rcPlayer4.y = SCREEN_HEIGHT/2-75;
+    rcPlayer1.x = SCREEN_WIDTH/2-rcPlayer1.w;
+    rcPlayer1.y = SCREEN_HEIGHT-50;
+    ///Start position Player2
+    rcPlayer2.x = SCREEN_WIDTH/2-rcPlayer2.w;
+    rcPlayer2.y = 25;
+    ///Start position Player3
+    rcPlayer3.x = 25;
+    rcPlayer3.y = SCREEN_HEIGHT/2-rcPlayer3.w;
+    ///Start position Player4
+    rcPlayer4.x = SCREEN_WIDTH-50;
+    rcPlayer4.y = SCREEN_HEIGHT/2-rcPlayer4.w;
 
 	//Players text
 	rcPlayer1_text.x = SCREEN_WIDTH/2-100;
