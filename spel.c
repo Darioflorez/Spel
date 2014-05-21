@@ -316,7 +316,7 @@ const char* score[] = {" ","D","D D","D D D","D D D D","D D D D D","D D D D D D"
 ///The Music
 Mix_Chunk* effect;
 Mix_Music* music;
-double test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
+double test;
 
 bool init()
 {
@@ -324,7 +324,7 @@ bool init()
 	bool success = true;
 
 	///Initialize SDL
-	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0 )
 	{
 		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
 		success = false;
@@ -344,6 +344,17 @@ bool init()
 			gScreenSurface = SDL_GetWindowSurface( gWindow );
 		}
 	}
+
+  //Sound
+
+   if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
+   {
+      printf("Mix_GetError()\n");
+      return -1;
+   }
+      
+
+
 
 	///Initialize TTF
 	if (TTF_Init() == -1)
@@ -429,7 +440,7 @@ bool loadMedia()
   }
 
 	///Load a ball
-	Ball = SDL_LoadBMP("ball4.bmp");
+	Ball = SDL_LoadBMP("neon_ball2.bmp");
 	if(Ball == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "ball4.bmp", SDL_GetError() );
@@ -437,7 +448,7 @@ bool loadMedia()
 	}
 
 	///Load a Player1
-	Player1 = SDL_LoadBMP("block_p1_p2.bmp");
+	Player1 = SDL_LoadBMP("neon_p1_p2.bmp");
 	if(Player1 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "block_p1.bmp", SDL_GetError() );
@@ -445,7 +456,7 @@ bool loadMedia()
 	}
 
 	///Load a Player2
-	Player2 = SDL_LoadBMP("block_p1_p2.bmp");
+	Player2 = SDL_LoadBMP("neon_p1_p2.bmp");
 	if(Player2 == NULL)
 	{
         printf( "Unable to load image %s! SDL Error: %s\n", "rectangle_yellow2.bmp", SDL_GetError() );
@@ -573,7 +584,17 @@ bool loadMedia()
 
     ///Music
     music = Mix_LoadMUS("beat.wav");
+    if(music == NULL) 
+    {
+      fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+    }
+
+
     effect = Mix_LoadWAV("low.wav");
+    if(effect == NULL) 
+    {
+      fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+    }
 
 	///Start position Player1
 	rcPlayer1.x = SCREEN_WIDTH/2-75;
@@ -686,7 +707,11 @@ int main( int argc, char* args[] )
 			///While application is running
 			while( !gameover )
 			{
-        Mix_PlayMusic(music,-1);
+        
+        if(Mix_PlayMusic(music,-1) == -1) 
+        {
+          fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+        }
 				///Look for events
 				if( SDL_PollEvent( &event ) )
 				{

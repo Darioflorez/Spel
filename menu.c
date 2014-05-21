@@ -46,7 +46,11 @@ int mainMenu(SDL_Window* gWindow, SDL_Surface* gScreenSurface, TTF_Font* font, M
                     switch(event.key.keysym.sym)
                     {
                         case SDLK_DOWN:
-                            Mix_PlayChannel(-1,effect,0);
+                            if(Mix_PlayChannel(-1,effect,0 )== -1)
+                            {
+                                fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+                            }
+
                             for(i=0;i<MainNum;i++)
                             {
                                 if(selected[i])
