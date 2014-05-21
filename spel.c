@@ -374,10 +374,10 @@ bool loadMedia()
 	bool success = true;
 
 	///Load splash image
-	gXOut = SDL_LoadBMP( "black.bmp" );
+	gXOut = SDL_LoadBMP( "stars.bmp" );
 	if( gXOut == NULL )
 	{
-		printf( "Unable to load image %s! SDL Error: %s\n", "black.bmp", SDL_GetError() );
+		printf( "Unable to load image %s! SDL Error: %s\n", "m31_small.bmp", SDL_GetError() );
 		success = false;
 	}
 

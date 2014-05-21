@@ -136,7 +136,7 @@ bool loadMedia()
 	bool success = true;
 
 	///Load splash image
-	XOut = SDL_LoadBMP( "black.bmp" );
+	XOut = SDL_LoadBMP( "stars.bmp" );
 	if( XOut == NULL )
 	{
 		printf( "Unable to load image %s! SDL Error: %s\n", "black.bmp", SDL_GetError() );
