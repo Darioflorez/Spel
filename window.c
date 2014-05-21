@@ -60,10 +60,12 @@ SDL_Rect rcwall_p3;
 SDL_Surface* wall_p4 = NULL;
 SDL_Rect rcwall_p4;
 
-//Music
-//Mix_Chunk* effect;
-//Mix_Music* music;
-//double test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
+///The Music
+Mix_Chunk* effect;
+Mix_Chunk* music_start;
+Mix_Music* music;
+Mix_Chunk* collision;
+double test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
 
 
 //Score
@@ -136,7 +138,7 @@ bool loadMedia()
 	bool success = true;
 
 	///Load splash image
-	XOut = SDL_LoadBMP( "stars.bmp" );
+	XOut = SDL_LoadBMP( "stars.bmp");
 	if( XOut == NULL )
 	{
 		printf( "Unable to load image %s! SDL Error: %s\n", "black.bmp", SDL_GetError() );
@@ -310,9 +312,12 @@ bool loadMedia()
 
 
     //Load music
-    test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
     music = Mix_LoadMUS("beat.wav");
     effect = Mix_LoadWAV("low.wav");
+    music_start = Mix_LoadWAV("space_start.wav");
+    collision = Mix_LoadWAV("collision.wav");
+
+
 
     //Blitsurface to save the data of the wall players and ball to send to the server
     SDL_BlitSurface(wall_p1, NULL, ScreenSurface, &rcwall_p1);

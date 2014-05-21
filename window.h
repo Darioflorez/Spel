@@ -116,6 +116,8 @@ extern const char* score[1000];
 ///The Music
 extern Mix_Chunk* effect;
 extern Mix_Music* music;
+extern Mix_Chunk* music_start;
+extern Mix_Chunk* collision;
 extern double test;
 
 extern bool create_window();

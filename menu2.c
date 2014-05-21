@@ -103,7 +103,7 @@ int mainMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
                                     SDL_FreeSurface(Menu[i]);
                                     if(i==0) ///start
                                     {
-                                        if (connect_to_server() == FAILURE)
+                                        if (connect_to_server() == FAILURE) //Connect
                                         {
                                             return 1;
                                         }

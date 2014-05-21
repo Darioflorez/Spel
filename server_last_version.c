@@ -397,6 +397,10 @@ void *ball_move(void *arg)
             }
             rcball.y -= 5;/// to avoid geting stuck and adds a "bounce"-effect
             newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+
+            strcpy(message, "collision");
+            Broadcast_Packet(message, packet);
+
         }
 
         if (Collition(rcPlayer2, rcball))/// Returns true if collition is detected ///if(rcball.y < rcPlayer2.y)///
@@ -410,6 +414,9 @@ void *ball_move(void *arg)
             }
             rcball.y += 5;/// to avoid geting stuck and adds a "bounce"-effect
             newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+
+            strcpy(message, "collision");
+            Broadcast_Packet(message, packet);
         }
 
 
@@ -424,6 +431,9 @@ void *ball_move(void *arg)
             }
             rcball.x += 5;/// to avoid geting stuck and adds a "bounce"-effect
             newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+
+            strcpy(message, "collision");
+            Broadcast_Packet(message, packet);
         }
 
 
@@ -440,6 +450,9 @@ void *ball_move(void *arg)
             }
             rcball.x -= 5;/// to avoid geting stuck and adds a "bounce"-effect
             newDirectionBall(angle,rcball); /// to get new direction on the ball from current location
+
+            strcpy(message, "collision");
+            Broadcast_Packet(message, packet);
         }
 
 

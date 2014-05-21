@@ -37,11 +37,6 @@ int NextTick;
 int points_made = 0;
 char wall_play[20];
 
-///The Music
-Mix_Chunk* effect;
-Mix_Music* music;
-double test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
-
 //End of game
 SDL_Rect rcendofgame;
 SDL_Surface* endofgame = NULL;
@@ -361,6 +356,15 @@ void decode_packet(char* packet)
    {
         gameover = true;
    }
+
+   else if(strstr(packet, "collision"))
+   {
+        //Play sound
+        if(Mix_PlayChannel(-1,collision,0 )== -1)
+        {
+            fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+        }
+   }
 }
 
 int go_to_menu_and_connect_to_the_server()
@@ -384,6 +388,10 @@ int go_to_menu_and_connect_to_the_server()
         printf("\nThread created successfully\n");
     }
 
+    if(Mix_PlayChannel(-1,music_start,0 )== -1)
+    {
+        fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+    }
 
     //FPS_Init();
     while(!gameover)
@@ -448,6 +456,9 @@ int main(int argc, char **argv)
                     close();
                     return EXIT_FAILURE;
                 }
+
+                //AVSLUTNINGS LÅT
+
                 if (pthread_join(Thread_id, NULL) != 0) 
                 {
                     perror("pthread_join() error");
