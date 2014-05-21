@@ -103,6 +103,7 @@ bool create_window()
     {
         ///Create window           ///Title
         Window = SDL_CreateWindow("Pingpong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        //SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL);
         if (Window == 0)
         {
             printf("Window could not be created, SDL Error: %s\n", SDL_GetError());

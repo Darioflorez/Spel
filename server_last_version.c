@@ -79,7 +79,7 @@ char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 80; //80fps ger bra resultat//
+const int FRAME_PER_SECOND = 20; //80fps ger bra resultat//
 int Intervall;
 ///Time controll
 int NextTick;
@@ -109,17 +109,17 @@ void FPS_Init()
     return;
 }
 
-void Broadcast_Packet(char *message, ENetPacket *packet)
+void Broadcast_Packet(char *message, ENetPacket *packet )
 {
     packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE); //ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT
-    enet_host_broadcast (server, 0, packet);                                              //ENET_PACKET_FLAG_RELIABLE
+    enet_host_broadcast (server, 0, packet); //Argument number two are the channel        //ENET_PACKET_FLAG_RELIABLE
 }                                                                                         //ENET_PACKET_FLAG_SENT
                                                                                           //ENET_PACKET_FLAG_UNSEQUENCED 
 void newDirectionBall(double angle, struct SDL_Rect &ball)
 {
     acc_distance = 0;
-    printf("\nRCBALL.X: %d ", ball.x);
-    printf("\nRCBALL.Y: %d ", ball.y);
+    //printf("\nRCBALL.X: %d ", ball.x);
+    //printf("\nRCBALL.Y: %d ", ball.y);
     scale_x = cos((PI*angle)/180);
     scale_y = (sin((PI*angle)/180))*(-1);
     Vel_x = scale_x * acc_vel;
@@ -127,16 +127,16 @@ void newDirectionBall(double angle, struct SDL_Rect &ball)
     StartPosition_x = ball.x;
     StartPosition_y = ball.y;
     Resultante = sqrt((scale_x*scale_x)+(scale_y*scale_y));
-    printf("\nANGLE: %f ", angle);
+    /*printf("\nANGLE: %f ", angle);
     printf("\nSIN: %f ", scale_y);
     printf("\nCOS: %f ", scale_x);
-    printf("\nRESULANTE: %f ", Resultante);
+    printf("\nRESULANTE: %f ", Resultante);*/
     acc_vel += 0.1;
 }
 
 void RestartBall(struct SDL_Rect &ball)/// accumelated velosity
 {
-  acc_vel = 3;
+  acc_vel = 8;
   acc_distance = 0;
   ball.x = SCREEN_WIDTH/2-ball.w;
   ball.y = SCREEN_HEIGHT/2-ball.h;
@@ -598,7 +598,7 @@ void Player_Action()
     switch(player1_input)
     {
         case LEFT:
-            rcPlayer1.x -= 30;
+            rcPlayer1.x -= 20;
             if(rcPlayer1.x < 0 )
             {
                 rcPlayer1.x = 0;
@@ -609,7 +609,7 @@ void Player_Action()
             break;
 
         case RIGHT:
-            rcPlayer1.x += 30;
+            rcPlayer1.x += 20;
             if(rcPlayer1.x > SCREEN_WIDTH - 150)
             {
                 rcPlayer1.x = SCREEN_WIDTH - 150;
@@ -623,7 +623,7 @@ void Player_Action()
     switch(player2_input)
     {
         case LEFT:
-            rcPlayer2.x -= 30;
+            rcPlayer2.x -= 20;
             if(rcPlayer2.x < 0 )
             {
                 rcPlayer2.x = 0;
@@ -634,7 +634,7 @@ void Player_Action()
             break;
 
             case RIGHT:
-                rcPlayer2.x += 30;
+                rcPlayer2.x += 20;
                 if(rcPlayer2.x > SCREEN_WIDTH - 150)
                 {
                     rcPlayer2.x = SCREEN_WIDTH - 150;
@@ -648,7 +648,7 @@ void Player_Action()
     switch(player3_input)
     {
         case UP:
-            rcPlayer3.y -= 30;
+            rcPlayer3.y -= 20;
             if(rcPlayer3.y < 0 )
             {
                 rcPlayer3.y = 0;
@@ -659,7 +659,7 @@ void Player_Action()
             break;
 
         case DOWN:
-            rcPlayer3.y += 30;
+            rcPlayer3.y += 20;
             if(rcPlayer3.y > SCREEN_HEIGHT - 150)
             {
                 rcPlayer3.y = SCREEN_HEIGHT - 150;
@@ -673,7 +673,7 @@ void Player_Action()
     switch(player4_input)
     {
         case UP:
-            rcPlayer4.y -= 30;
+            rcPlayer4.y -= 20;
             if(rcPlayer4.y < 0 )
             {
                 rcPlayer4.y = 0;
@@ -684,7 +684,7 @@ void Player_Action()
             break;
 
         case DOWN:
-            rcPlayer4.y += 30;
+            rcPlayer4.y += 20;
             if(rcPlayer4.y > SCREEN_HEIGHT - 150)
             {
                 rcPlayer4.y = SCREEN_HEIGHT - 150;
@@ -722,6 +722,9 @@ int look_for_clients_and_start_the_game()
                     enet_peer_send(event.peer, 0, packet);
                     printf("Peer: %x\n", client[New_Client]->address.host);
                     printf("%d\n", New_Client);
+                    break;
+
+            case ENET_EVENT_TYPE_DISCONNECT:
                     break;
 
             case ENET_EVENT_TYPE_RECEIVE:
