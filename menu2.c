@@ -25,8 +25,8 @@ int mainMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
     position[2].x = 640/2;
     position[2].y = 480/2;
 
-    SDL_FillRect(ScreenSurface,NULL,0x00); ///Clear screen
-
+    //SDL_FillRect(ScreenSurface,NULL,0x00); ///Clear screen
+    SDL_BlitSurface( Menu_Image, NULL, ScreenSurface, NULL );
     SDL_Event event;
     while(1)
     {

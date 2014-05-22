@@ -11,7 +11,7 @@ ENetAddress address;
 ENetHost *client;
 ENetPeer *peer;
 char message[1024];
-char me[20];
+char me[20]; //Player id
 ENetEvent netevent;
 ENetPacket *packet;
 int neteventStatus;
@@ -23,6 +23,7 @@ bool GOAL = false;
 bool wall = false;
 bool print_gameover = false;
 bool play_the_game = true;
+bool start_game = false;
 
 ///Thread
 struct event input;
@@ -258,7 +259,7 @@ void *deal_with_input(void* input)
         else
         {   
             ///Apply the image
-            Update_The_Surface();
+            Update_The_Surface(p->me);
             if(n > 0)
             {
 
@@ -331,7 +332,13 @@ void decode_packet(char* packet)
    //When someone score a goal SCORE comes up on he screen
    else if (strstr(packet, "score"))
    {
-       GOAL = true; 
+        //FUCK
+        /*if(Mix_PlayChannel(-1,fuck,0 )== -1)
+        {
+            fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+        }*/
+
+        GOAL = true; 
    }
    //This is used to count how many points have been scored along the game
    //Every five points scored all the players become invisible
@@ -366,6 +373,10 @@ void decode_packet(char* packet)
         {
             fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
         }
+   }
+   else if (strstr(packet, "start_game"))
+   {
+       start_game = true;
    }
 }
 
@@ -419,6 +430,7 @@ int go_to_menu_and_connect_to_the_server()
                 case ENET_EVENT_TYPE_DISCONNECT:
                     printf("(Client) %s Server disconnected.....\n\nGAME OVER!!!", (char* )netevent.peer->data);
                     gameover = true;
+                    start_game = false;
                     /// Reset client's information
                     netevent.peer->data = NULL;
                     return -1;
@@ -469,12 +481,18 @@ int main(int argc, char **argv)
                     close();
                     return EXIT_FAILURE;
                 }
-                else if (controll == 2)
+                else if (controll == 2) //User presed QUIT or EXIT and it was not connected to the server
                 {
                     play_the_game = false;
                     ///Free resources and close SDL
-                    close();
-                    return EXIT_SUCCESS;
+                    if(close())
+                    {
+                        return EXIT_SUCCESS;
+                    }
+                    else 
+                    {
+                        return EXIT_FAILURE;
+                    }
 
                 }
 
@@ -488,12 +506,19 @@ int main(int argc, char **argv)
                     printf("pthread_join() successfully\n\n");
                 }
 
-                if(JoinThread != 0) //Exit the game and close the window
+                if(JoinThread != 0) //The user presed QUIT during the game.
                 {
                     disconnect_from_server();
                     ///Free resources and close SDL
-                    close();
-                    return EXIT_SUCCESS;
+                    if (close())
+                    {
+                        return EXIT_SUCCESS;
+                    }
+                    else
+                    {
+                        return EXIT_FAILURE;
+                    }
+
                 }
                 else 
                 {

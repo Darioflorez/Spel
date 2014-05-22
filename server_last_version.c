@@ -79,7 +79,7 @@ char message[50];
 
 
 ///Timer
-const int FRAME_PER_SECOND = 20; //80fps ger bra resultat//
+const int FRAME_PER_SECOND = 20; //80fps ger bra resultat//Bästa resultat 20
 int Intervall;
 ///Time controll
 int NextTick;
@@ -327,6 +327,9 @@ void *ball_move(void *arg)
     sprintf(message, "ball.y %d", rcball.y);
     Broadcast_Packet(message, packet);
     SDL_Delay(2000);
+
+    strcpy(message, "start_game");
+    Broadcast_Packet(message, packet);
 
 
     //Server gameloop
@@ -776,8 +779,8 @@ int look_for_clients_and_start_the_game()
         printf("\nThread created successfully\n");
     }
 
+    //Start the game
     resetPlayerPosition();
-
     //Main thread receive packets, decode them and send back info about players
     while(!gameover)
     {

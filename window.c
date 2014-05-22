@@ -8,6 +8,8 @@ SDL_Surface *ScreenSurface = NULL;
 
 ///The image we will load and show on the screen
 SDL_Surface* XOut = NULL;
+//The menu image
+SDL_Surface* Menu_Image = NULL;
 
 //When you score a point
 SDL_Surface* scoreMade = NULL;
@@ -66,6 +68,7 @@ Mix_Chunk* music_start;
 Mix_Music* music;
 Mix_Chunk* collision;
 Mix_Chunk* GM_over;
+Mix_Chunk* fuck;
 double test = Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,768);
 
 
@@ -139,12 +142,20 @@ bool loadMedia()
 	bool success = true;
 
 	///Load splash image
-	XOut = SDL_LoadBMP( "stars.bmp");
-	if( XOut == NULL )
+	XOut = SDL_LoadBMP( "space-blue-purple-stars.bmp"); // space-blue-purple-stars.bmp stars.bmp 
+    if( XOut == NULL )                //outer-space.bmp deep-space.bmp
 	{
-		printf( "Unable to load image %s! SDL Error: %s\n", "black.bmp", SDL_GetError() );
+		printf( "Unable to load image %s! SDL Error: %s\n", "stars.bmp", SDL_GetError() );
 		success = false;
 	}
+
+    //load menu image
+    Menu_Image = SDL_LoadBMP("spaceship.bmp"); //space-7.bmp spaceship.bmp
+    if (Menu_Image == NULL)
+    {
+        printf( "Unable to load image %s! SDL Error: %s\n", "spaceship.bmp", SDL_GetError() );
+        success = false;
+    }
 
 	///Load a ball
 	Ball = SDL_LoadBMP("neon_ball4.bmp");
@@ -314,10 +325,11 @@ bool loadMedia()
 
     //Load music
     music = Mix_LoadMUS("beat.wav");
-    effect = Mix_LoadWAV("low.wav");
+    effect = Mix_LoadWAV("laser_menu.wav"); //low.wav
     music_start = Mix_LoadWAV("space_start.wav");
     collision = Mix_LoadWAV("LASER.wav");
     GM_over = Mix_LoadWAV("GameOver.wav");
+    fuck = Mix_LoadWAV("fuck.wav");
 
 
 
@@ -384,7 +396,7 @@ bool loadMedia()
 	return success;
 }
 
-void close()
+bool close()
 {
 	///Deallocate surface
 	SDL_FreeSurface( XOut );
@@ -411,4 +423,6 @@ void close()
 	TTF_Quit();
 	///Quit SDL subsystems
 	SDL_Quit();
+
+    return true;
 }

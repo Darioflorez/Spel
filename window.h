@@ -22,6 +22,7 @@
 extern bool GOAL;
 extern bool FAILURE;
 extern bool print_gameover;
+extern bool start_game;
 
 ///The window we'll be rendering to
 extern SDL_Window *Window;
@@ -30,6 +31,8 @@ extern SDL_Surface *ScreenSurface;
 
 ///The image we will load and show on the screen
 extern SDL_Surface* XOut;
+//The menu image
+extern SDL_Surface* Menu_Image;
 
 //Score a point
 extern SDL_Surface* scoreMade;
@@ -119,12 +122,13 @@ extern Mix_Music* music;
 extern Mix_Chunk* music_start;
 extern Mix_Chunk* collision;
 extern Mix_Chunk* GM_over;
+extern Mix_Chunk* fuck;
 extern double test;
 
 extern bool create_window();
 extern bool loadMedia();
-extern void close();
-extern int Update_The_Surface();
+extern bool close();
+extern int Update_The_Surface(char *me);
 extern int mainMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
 extern int nextMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);
 extern int instMenu(SDL_Window*, SDL_Surface*, TTF_Font*, Mix_Chunk*);

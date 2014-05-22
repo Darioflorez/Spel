@@ -1,8 +1,102 @@
 #include "window.h"
 
-int Update_The_Surface()
+int n = 12;
+int i = 0;
+
+int Update_The_Surface(char * me)
 {
-    ///Apply the image
+
+    if (!start_game) //Look which player you are and make it blink
+    {
+        SDL_BlitSurface( XOut, NULL, ScreenSurface, NULL );
+        //Waiting for more players
+        if(strcmp(me, "player1") == 0)
+        {
+            if (n > 0)
+            {
+                SDL_BlitSurface(Player1, NULL, ScreenSurface, &rcPlayer1);
+                n--;
+                if(n == 0){i = 0;}
+            }
+            else if (i< 12 )
+            {
+                i++;
+                if (i == 12){ n = 12; }
+
+            }
+
+            SDL_BlitSurface(Player2, NULL, ScreenSurface, &rcPlayer2);
+            SDL_BlitSurface(Player3, NULL, ScreenSurface, &rcPlayer3);
+            SDL_BlitSurface(Player4, NULL, ScreenSurface, &rcPlayer4); 
+        }
+
+        else if(strcmp(me, "player2") == 0)//Look which player you are and make it blink
+        {
+            if (n > 0)
+            {
+                SDL_BlitSurface(Player2, NULL, ScreenSurface, &rcPlayer2);
+                n--;
+                if(n == 0){i = 0;}
+            }
+            else if (i< 12 )
+            {
+                i++;
+                if (i == 12){ n = 12; }
+
+            }
+
+            SDL_BlitSurface(Player1, NULL, ScreenSurface, &rcPlayer1);
+            SDL_BlitSurface(Player3, NULL, ScreenSurface, &rcPlayer3);
+            SDL_BlitSurface(Player4, NULL, ScreenSurface, &rcPlayer4);
+        }
+        else if(strcmp(me, "player3") == 0)//Look which player you are and make it blink
+        {
+           if (n > 0)
+            {
+                SDL_BlitSurface(Player3, NULL, ScreenSurface, &rcPlayer3);
+                n--;
+                if(n == 0){i = 0;}
+            }
+            else if (i< 12 )
+            {
+                i++;
+                if (i == 12){ n = 12; }
+
+            }
+
+            SDL_BlitSurface(Player1, NULL, ScreenSurface, &rcPlayer1);
+            SDL_BlitSurface(Player2, NULL, ScreenSurface, &rcPlayer2);
+            SDL_BlitSurface(Player4, NULL, ScreenSurface, &rcPlayer4);
+        }
+        else if(strcmp(me, "player4") == 0)//Look which player you are and make it blink
+        {
+            if (n > 0)
+            {
+                SDL_BlitSurface(Player4, NULL, ScreenSurface, &rcPlayer4);
+                n--;
+                if(n == 0){i = 0;}
+            }
+            else if (i< 12 )
+            {
+                i++;
+                if (i == 12){ n = 12; }
+
+            }
+
+            SDL_BlitSurface(Player1, NULL, ScreenSurface, &rcPlayer1);
+            SDL_BlitSurface(Player2, NULL, ScreenSurface, &rcPlayer2);
+            SDL_BlitSurface(Player3, NULL, ScreenSurface, &rcPlayer3);
+        }
+
+        SDL_BlitSurface(text1, NULL, ScreenSurface, &rctext1);
+        SDL_BlitSurface(text2, NULL, ScreenSurface, &rctext2);
+        SDL_BlitSurface(text3, NULL, ScreenSurface, &rctext3);
+        SDL_BlitSurface(text4, NULL, ScreenSurface, &rctext4);
+
+    }
+    else
+    {
+        ///Apply the image
     SDL_BlitSurface( XOut, NULL, ScreenSurface, NULL );
     SDL_BlitSurface(Ball, NULL, ScreenSurface, &rcball);
 
@@ -48,6 +142,7 @@ int Update_The_Surface()
     SDL_BlitSurface(text2, NULL, ScreenSurface, &rctext2);
     SDL_BlitSurface(text3, NULL, ScreenSurface, &rctext3);
     SDL_BlitSurface(text4, NULL, ScreenSurface, &rctext4);
+    }
 
     ///Update the surface
     //SDL_UpdateWindowSurface( Window );
@@ -56,7 +151,8 @@ int Update_The_Surface()
 
 int game_over_and_restart_the_game()
 {
-    for(int i=0;i<=60;i++)
+    start_game = false;
+    for(i=0;i<=60;i++)
     {
         font4 = TTF_OpenFont("good.ttf", i);
         rcendofgame.x = ScreenSurface->clip_rect.w/2-rcendofgame.w/2;
@@ -97,5 +193,8 @@ int game_over_and_restart_the_game()
     text2 = TTF_RenderText_Blended(font3, score[points[2]], colors[points[2]]);
     text3 = TTF_RenderText_Blended_Wrapped(font3, score[points[3]], colors[points[3]],30);
     text4 = TTF_RenderText_Blended_Wrapped(font3, score[points[4]], colors[points[4]],30);
+
+    n=12;
+    i=0;
     return 0;
 }
