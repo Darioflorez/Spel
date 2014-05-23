@@ -215,6 +215,13 @@ void *deal_with_input(void* input)
                         gameover = true; //Return to main menu and disconnect from the server
                         break;
 
+                    case SDLK_f:
+                        if(Mix_PlayChannel(-1,fuck,0 )== -1)
+                        {
+                            fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+                        }
+                        break;
+
                     case SDLK_LEFT:
                         strcpy(message, p->me);
                         strcat(message, " left");
@@ -333,10 +340,10 @@ void decode_packet(char* packet)
    else if (strstr(packet, "score"))
    {
         //FUCK
-        if(Mix_PlayChannel(-1,fuck,0 )== -1)
+        /*if(Mix_PlayChannel(-1,fuck,0 )== -1)
         {
             fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
-        }
+        }*/
 
         GOAL = true; 
    }
