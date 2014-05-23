@@ -160,8 +160,8 @@ int nextMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
     position[2].x = 640/2;
     position[2].y = 480/2;
 
-    SDL_FillRect(ScreenSurface,NULL,0x00); ///Clear Screen
-
+    //SDL_FillRect(ScreenSurface,NULL,0x00); ///Clear Screen
+    SDL_BlitSurface( OPT_Image, NULL, ScreenSurface, NULL );
     SDL_Event event;
     while(1)
     {
@@ -290,8 +290,8 @@ int instMenu(SDL_Window* Window, SDL_Surface* ScreenSurface, TTF_Font* font, Mix
     posInstruct[3].x = 20;
     posInstruct[3].y = 500/2;
 
-    SDL_FillRect(ScreenSurface,NULL,0x00); ///Clear Screen
-
+    //SDL_FillRect(ScreenSurface,NULL,0x00); ///Clear Screen
+    SDL_BlitSurface( OPT_Image, NULL, ScreenSurface, NULL );
     SDL_Event event;
     while(1)
     {

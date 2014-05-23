@@ -33,6 +33,7 @@ extern SDL_Surface *ScreenSurface;
 extern SDL_Surface* XOut;
 //The menu image
 extern SDL_Surface* Menu_Image;
+extern SDL_Surface* OPT_Image;
 
 //Score a point
 extern SDL_Surface* scoreMade;

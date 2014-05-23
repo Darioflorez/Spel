@@ -10,6 +10,7 @@ SDL_Surface *ScreenSurface = NULL;
 SDL_Surface* XOut = NULL;
 //The menu image
 SDL_Surface* Menu_Image = NULL;
+SDL_Surface* OPT_Image = NULL;
 
 //When you score a point
 SDL_Surface* scoreMade = NULL;
@@ -156,6 +157,15 @@ bool loadMedia()
         printf( "Unable to load image %s! SDL Error: %s\n", "spaceship.bmp", SDL_GetError() );
         success = false;
     }
+
+    //options image
+    OPT_Image = SDL_LoadBMP("space-7.bmp"); //space-7.bmp spaceship.bmp
+    if (Menu_Image == NULL)
+    {
+        printf( "Unable to load image %s! SDL Error: %s\n", "spaceship.bmp", SDL_GetError() );
+        success = false;
+    }
+
 
 	///Load a ball
 	Ball = SDL_LoadBMP("neon_ball4.bmp");
