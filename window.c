@@ -142,7 +142,7 @@ bool loadMedia()
 	bool success = true;
 
 	///Load splash image
-	XOut = SDL_LoadBMP( "space-blue-purple-stars.bmp"); // space-blue-purple-stars.bmp stars.bmp 
+	XOut = SDL_LoadBMP( "outer-space.bmp"); // space-blue-purple-stars.bmp stars.bmp 
     if( XOut == NULL )                //outer-space.bmp deep-space.bmp
 	{
 		printf( "Unable to load image %s! SDL Error: %s\n", "stars.bmp", SDL_GetError() );
@@ -150,7 +150,7 @@ bool loadMedia()
 	}
 
     //load menu image
-    Menu_Image = SDL_LoadBMP("spaceship.bmp"); //space-7.bmp spaceship.bmp
+    Menu_Image = SDL_LoadBMP("space-7.bmp"); //space-7.bmp spaceship.bmp
     if (Menu_Image == NULL)
     {
         printf( "Unable to load image %s! SDL Error: %s\n", "spaceship.bmp", SDL_GetError() );
