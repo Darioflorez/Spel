@@ -333,10 +333,10 @@ void decode_packet(char* packet)
    else if (strstr(packet, "score"))
    {
         //FUCK
-        /*if(Mix_PlayChannel(-1,fuck,0 )== -1)
+        if(Mix_PlayChannel(-1,fuck,0 )== -1)
         {
             fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
-        }*/
+        }
 
         GOAL = true; 
    }
